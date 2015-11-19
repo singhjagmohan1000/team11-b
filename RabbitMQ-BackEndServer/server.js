@@ -1,4 +1,6 @@
 //super simple rpc server example
+//Testing backend server
+
 var amqp = require('amqp')
 , util = require('util');
 
