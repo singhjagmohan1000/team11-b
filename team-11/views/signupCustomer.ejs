@@ -1,3 +1,4 @@
+<!-- swati -->
 <!DOCTYPE html>
 
 <html lang="en">
@@ -7,7 +8,6 @@
 <link href="./css/bootstrap.min.css" rel="stylesheet">
 
 <link href="./css/custom.css" rel="stylesheet">
-
 
 
 <body style="background-color:#fff">
@@ -27,8 +27,8 @@
  <div class="col-md-6" style= "display: block;">
 
 
-
-	<form id="form" action="registerCustomer" method="post" name='registration' style= "border-style:groove;padding : 50px 40px 10px 40px;">
+	//changes done for signupcustomer
+	<form id="form" action="signupCustomer" method="post" name='registration' style= "border-style:groove;padding : 50px 40px 10px 40px;">
 
             
 
@@ -58,6 +58,155 @@
 		<br><p style = "font-size:16px;">* Address : </p><input class="form-control" type="text" name="address" value="" placeholder="Address" required>	
 
 		<br><p style = "font-size:16px;">* Mobile No : </p> <input type="tel" value="" name="mobile" id="mobile" placeholder="+1 (201) 555-5555"><br>
+		
+		<br>
+		<!-- changes made by swati -->
+		<p style="font-size:26px;">PAYMENT</p>
+		
+		<p style = "font-size:16px;">* Credit Card Number : </p><input class="form-control" type="text" name="cc_number" value="" placeholder="1234 5678 9101 1213" required>
+		
+		<br><p style = "font-size:16px;">* Card Holder's Name : </p><input class="form-control" type="text" name="cc_name" value="" placeholder="Team" required>
+		
+		<br><p style = "font-size:16px;">* CVV : </p><input class="form-control" type="text" name="cvv" value="" placeholder="123" required>
+		
+		<br><p style = "font-size:16px;">* Expiration Month : </p>
+		<select name="card_expiration_month" id="" class="">
+   		<option value="" label="month" disabled selected>month</option>
+    
+	     <option value="1" label="1">
+	        1
+	     </option>
+	    
+	     <option value="2" label="2">
+	        2
+	     </option>
+	    
+	     <option value="3" label="3">
+	        3
+	     </option>
+	    
+	     <option value="4" label="4">
+	        4
+	     </option>
+	    
+	     <option value="5" label="5">
+	        5
+	     </option>
+	    
+	     <option value="6" label="6">
+	        6
+	     </option>
+	    
+	     <option value="7" label="7">
+	        7
+	     </option>
+	    
+	     <option value="8" label="8">
+	        8
+	     </option>
+	    
+	     <option value="9" label="9">
+	        9
+	     </option>
+	    
+	     <option value="10" label="10">
+	        10
+	     </option>
+	    
+	     <option value="11" label="11">
+	        11
+	     </option>
+	    
+	     <option value="12" label="12">
+	        12
+	     </option>
+	    
+		 </select>
+	  	
+  		 <select name="card_expiration_year" id="" class="">
+    	 <option value="" label="year" disabled selected>year</option>
+    
+	     <option value="2015" label="2015">
+	        2015
+	     </option>
+	    
+	     <option value="2016" label="2016">
+	        2016
+	     </option>
+	    
+	     <option value="2017" label="2017">
+	        2017
+	     </option>
+	    
+	     <option value="2018" label="2018">
+	        2018
+	     </option>
+	    
+	     <option value="2019" label="2019">
+	        2019
+	     </option>
+	    
+	     <option value="2020" label="2020">
+	        2020
+	     </option>
+	    
+	     <option value="2021" label="2021">
+	        2021
+	     </option>
+	    
+	     <option value="2022" label="2022">
+	        2022
+	     </option>
+	    
+	     <option value="2023" label="2023">
+	        2023
+	     </option>
+	    
+	     <option value="2024" label="2024">
+	        2024
+	     </option>
+	    
+	     <option value="2025" label="2025">
+	        2025
+	     </option>
+	    
+	     <option value="2026" label="2026">
+	        2026
+	     </option>
+	    
+	     <option value="2027" label="2027">
+	        2027
+	     </option>
+	    
+	     <option value="2028" label="2028">
+	        2028
+	     </option>
+	    
+	     <option value="2029" label="2029">
+	        2029
+	     </option>
+	    
+	     <option value="2030" label="2030">
+	        2030
+	     </option>
+	    
+	     <option value="2031" label="2031">
+	        2031
+	     </option>
+	    
+	     <option value="2032" label="2032">
+	        2032
+	     </option>
+	    
+	     <option value="2033" label="2033">
+	        2033
+	     </option>
+	    
+	     <option value="2034" label="2034">
+	        2034
+	     </option>
+	    
+	  	 </select>
 
 		<br><center><input class="btn btn-lg btn-default" type="Submit" value="Register" /></center>
 
