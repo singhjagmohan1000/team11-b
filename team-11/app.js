@@ -13,6 +13,11 @@ var user = require('./routes/user');
 var customer = require('./routes/customer');
 var http = require('http');
 var path = require('path');
+var expressSession = require("express-session");
+var mongoStore = require("connect-mongo")(expressSession);
+//var mongo = require("./routes/mongo");
+var mongoose = require('mongoose');
+var connection = mongoose.connect("mongodb://localhost:27017/uber_db");
 
 var app = express();
 
