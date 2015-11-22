@@ -11,6 +11,7 @@ var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/user');
 var customer = require('./routes/customer');
+var driver = require('./routes/driver');
 var http = require('http');
 var path = require('path');
 var expressSession = require("express-session");
@@ -25,7 +26,7 @@ var app = express();
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-//app.use(express.favicon());
+
 app.use(express.favicon(__dirname + '/public/img/favicon.ico'));
 app.use(express.logger('dev'));
 app.use(express.json());
@@ -35,17 +36,24 @@ app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
-if ('development' == app.get('env')) {
+if ('development' === app.get('env')) {
   app.use(express.errorHandler());
 }
 
 app.get('/', routes.index);
-app.get('/users', user.list);
+
 //changes done by jagmohan 
 //customer
-app.get('/signupCustomer',customer.index);
+
 app.get('/loginCustomer',customer.login);
-app.post('/signupCustomer',customer.signup);
+app.post('/loginCustomer',customer.loginCustomer);
+app.get('/signupCustomer',customer.signup);
+app.post('/signupCustomer',customer.signupCustomer);
+
+app.get('/loginDriver',driver.login);
+app.post('/loginDriver',driver.loginDriver);
+app.get('/signupDriver',driver.signup);
+app.post('/signupDriver',driver.signupDriver);
 
 
 

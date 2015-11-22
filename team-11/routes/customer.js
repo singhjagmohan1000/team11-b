@@ -1,18 +1,68 @@
 
 var mq_client = require('../rpc/client');
+var ejs= require('ejs');
 
-function index(req,res){
+function signup(req,res){
 	
-	res.render('signupCustomer');
+	ejs.renderFile('./views/signupCustomer.ejs',function(err,result)
+	{
+		if(!err) 
+		{
+			res.end(result);
+	    }
+	    // render or error
+	    else 
+	    {
+	    	res.render('error');
+	    	console.log(err);
+	    }
+	});
 
-};
+}
 
 function login(req,res){
 	
-	res.render('loginCustomer');
+	ejs.renderFile('./views/loginCustomer.ejs',function(err,result)
+			{
+				if(!err) 
+				{
+					res.end(result);
+			    }
+			    // render or error
+			    else 
+			    {
+			    	res.render('error');
+			    	console.log(err);
+			    }
+			});
 
-};
-function signup(req,res){
+}
+function loginCustomer(req,res){
+	var customer_id = req.param('customer_id');
+    var password = req.param('password');
+    var msg_payload = {
+        	"customer_id":customer_id,	
+            "password" : password,
+            "type": "loginCustomer"
+        };
+mq_client.make_request('customer_queue', msg_payload, function(err,results) {
+        console.log(results);
+        if (err) {
+            console.log(err);
+            res.send(err);
+        } else {
+            console.log("Login results" + results);
+            
+            console.log(results.message);
+            	res.send(results);
+            
+            
+        }
+    });
+    
+
+}
+function signupCustomer(req,res){
 	var customer_id= req.param('customer_id');
 	var email = req.param('email');
     var password = req.param('password');
@@ -46,20 +96,25 @@ function signup(req,res){
         "cc_name" : cc_name,
         "cvv" : cvv,
         "month" : month,
-        "year" : year
+        "year" : year,
+        "type": "signupCustomer"
     };
 
     mq_client.make_request('customer_queue', msg_payload, function(err,results) {
         console.log(results);
         if (err) {
             console.log(err);
-            res.status(500).send(null);
+            res.send(err);
         } else {
             console.log("about results" + results);
-            res.status(results.status).send(results.data);
+            
+            	res.render('loginCustomer');
+            
+            
         }
     });
 }
 exports.login=login;
-exports.index=index;
+exports.loginCustomer=loginCustomer;
+exports.signupCustomer=signupCustomer;
 exports.signup=signup;

@@ -1,86 +1,193 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html >
+   <title>
+    Sign Up To Drive With Uber - Earn Cash With Your Car
+	</title>
+ <link href="css/superfine.css" rel="stylesheet">
+ <link rel="stylesheet" href="css/drive_short.css">
+ <link rel="stylesheet" href="css/drive_short_main.css">
+ <link rel="stylesheet" href="css/superfine2.css">
+ <body class=" ">
+ <section class="wrapper">
+      <header class="contextual"><div class="logo"></div>
+  <div class="signup-to-ride position--absolute push-tiny text--uppercase flex--vertical-center">
+      <span class="signup-to-ride-prompt push-small--right">Not interested in driving?</span>
+      <a href="/signupCustomer" target="_blank" class="signup-to-ride-btn btn btn--tiny btn--tertiary push-small--right">Sign Up to Ride</a>
+    </div>
+ </header>
+  <section class="content ">
+ <section class="hero billboard white-car-bg">
+    <section class="messaging">
+      <section class="container">
+        <section class="row">
+          <article class="col-md-8 header-text">
+            <h1 class="hero-title">Uber Needs Partners Like You.</h1>
+            <p class="hero-description ">
+              Drive with Uber and earn great money as an independent contractor. Get paid weekly just for helping our community of riders get rides around town. Be your own boss and get paid in fares for driving on your own schedule.
+            </p>
+          </article>
+        </section>
+      </section>
+    </section>
+    <section class="hero-box">
+      <section class="row">
+        <article class="col-md-4 col-md-offset-8">
+          <div class="hero-box-container">
 
-<title>Registration Form</title>
-
-<link href="./css/bootstrap.min.css" rel="stylesheet">
-
-<link href="./css/custom.css" rel="stylesheet">
+<form id="driver-lead-form" class="form-unlabeled js-submit-form" action="/signupDriver" method="POST">
 
 
+  <div class="box-title">
+    <h5 class="winged-title subtitle">
+      <span>Sign Up To Drive</span>
+    </h5>
+  </div>
+ <div data-js="login-info" class="login-group not_user">
+     <a class="btn rounded btn-primary cta-btn js-cta-hero hard--sides" id="login" href="/loginDriver">
+          <div class="uber-img">Already have an account?</div>
+        </a>
+        <div class="box-title">
+          <h5 class="winged-title subtitle small">
+            <span>Or create a new account</span>
+          </h5>
+        </div>
+      
+    </div>
 
-<body style="background-color:#fff">
-
-
-
-<div class="container">
-
-<br/><br/><br/><br/>
-
-<div class="row">
-
-
-
-<div class="col-md-3"></div>
-
- <div class="col-md-6" style= "display: block;">
-
-
-
-	<form id="form" action="registerCustomer" method="post" name='registration' style= "border-style:groove;padding : 50px 40px 10px 40px;">
-
-            
-
-		<h1 style="color:#1fbad6; font-size:50px;">SIGN UP TO RIDE !</h1><hr>
-		
-		<p style="font-size:26px;">ACCOUNT</p>
-		
-		<p style = "font-size:16px;"> * Email : </p><input class="form-control" maxlength="40" type="email" name="email" value="" placeholder="Email" required>
-
-		<br><p style = "font-size:16px;"> * Password :</p><input class="form-control" maxlength="10" type="text" name="password" value="" placeholder="Password" required>
-
-		<br>
-		<br>
-		<p style="font-size:26px;">PROFILE</p>
-		<p style = "font-size:16px;">* Firstname : </p>
-		<input class="form-control" name="firstName" size="20" placeholder="Firstname" required><br>
-
-		<p style = "font-size:16px;">* Lastname :</p>
-		<input class="form-control" type="text" name="lastName" value="" placeholder="Lastname" required><br>
-
-		<p style = "font-size:16px;">* City : </p><input class="form-control" type="text" name="city" value="" placeholder="City" required>	
-
-		<br><p style = "font-size:16px;">* State : </p><input class="form-control" type="text" name="state" value="" placeholder="State" required>	
-
-		<br><p style = "font-size:16px;">* Zipcode : </p><input class="form-control" type="text" name="zipCode" value="" placeholder="zipCode" required>	
-
-		<br><p style = "font-size:16px;">* Address : </p><input class="form-control" type="text" name="address" value="" placeholder="Address" required>	
-
-		<br><p style = "font-size:16px;">* Mobile No : </p> <input type="tel" value="" name="mobile" id="mobile" placeholder="+1 (201) 555-5555"><br>
-
-		<br><center><input class="btn btn-lg btn-default" type="Submit" value="Register" /></center>
-
-		<p></p><br>
-
-                
-
-	</form>
-
+  <div class="form-info">
+    <div class="form-group   ">
+      <div class="row form-row">
+        <div class="col-md-6 col-xs-6 md-push-right-half xs-push-right-half">
+  <input type="text" value="" name="d_first_name" id="d_first_name" autofocus="" placeholder="First Name">
   
+  <div class="error-notice"></div>
+        </div>
+        <div class="col-md-6 col-xs-6 md-push-left-half xs-push-left-half">
+  <input type="text" value="" name="d_last_name" id="d_last_name" placeholder="Last Name"> 
+  <div class="error-notice"></div>
+        </div>
+      </div>
+    </div>
+ 
+  <div class="form-group  ">
+ 
+  <input type="email" value="" name="d_email" id="d_email" placeholder="name@example.com">
+  
+  <div class="error-notice"></div>
+  </div>
+  <div class="form-group  ">
+ 
+  <input type="text" value="" name="driver_id" id="driver_id" placeholder="888-888-8888 SSN">
+  
+  <div class="error-notice"></div>
+  </div>
+<div class="form-group  ">
 
-</div>
+  <input type="tel" value="" name="d_phonenumber" id="d_phonenumber" placeholder="Phone">
+  
+  <div class="error-notice"></div>
+  </div>
 
-<div class="col-md-3"></div>
+  <div class="form-group  ">
+  
+  <input type="password" value="" name="d_password" id="d_password" placeholder="Password (At least 5 characters)">
+  
+  <div class="error-notice"></div>
+  </div>
+    
+      
+ <div class="form-group  ">
+  
+  <input type="text" value="" name="d_city" id="d_city" placeholder="City">
+  
+  <div class="error-notice"></div>
+  </div>
+   <div class="form-group  ">
+  
+  <input type="text" value="" name="d_state" id="d_state" placeholder="State">
+  
+  <div class="error-notice"></div>
+  </div>
+   <div class="form-group  ">
+  
+  <input type="text" value="" name="d_address" id="d_address" placeholder="Address">
+  
+  <div class="error-notice"></div>
+  </div>
+  <div class="form-group  ">
+  
+  <input type="text" value="" name="d_zipcode" placeholder="ZipCode">
+  
+  <div class="error-notice"></div>
+  </div>
+   <div class="form-group  ">
+  
+  <input type="text" value="" name="d_car_name" id="d_car_name" placeholder="Name of Car">
+  
+  <div class="error-notice"></div>
+  </div>
+   <div class="form-group  ">
+  
+  <input type="text" value="" name="d_car_number" id="d_car_number" placeholder="Car Registeration ">
+  
+  <div class="error-notice"></div>
+  </div>
 
-</div>
+  <div class="row submit">
+    <div class="col-md-12">
+      <div class="form-group">
+    
+  
+  <button type="" class="btn btn-primary drive_signup_submit_button">
+    <span class="preloader preloader--negative preloader--medium center-block hidden" id="submitButtonPreloader"></span>
+    <div id="submitButtonText">Next</div>
+  </button>
+  </div>
+   
+    </div>
+  </div>
+</form>
+          </div>
+        </article>
+      </section>
+    </section>
+  </section>
+  <section class="container main">
 
-</div>
+<article class="row feature-row">
+  <div class="col-md-3">
+    <div class="gfx gfx-money"></div>
+  </div>
+  <div class="col-md-5">
+    <h3>Make good money.</h3>
+    <p>Got a car? Turn it into a money machine. The city is buzzing and Uber makes it easy for you to cash in on the action. Plus, you've already got everything you need to get started.</p>
+  </div>
+</article>
+<article class="row feature-row">
+  <div class="col-md-3">
+    <div class="gfx gfx-time"></div>
+  </div>
+  <div class="col-md-5">
+    <h3>Drive when you want.</h3>
+    <p>Need something outside the 9 to 5? As an independent contractor with Uber, you’ve got freedom and flexibility to drive whenever you have time. Set your own schedule, so you can be there for all of life’s most important moments.</p>
+  </div>
+</article>
+<article class="row feature-row">
+  <div class="col-md-3">
+    <div class="gfx gfx-freedom"></div>
+  </div>
+  <div class="col-md-5">
+    <h3>No office, no boss.</h3>
+    <p>Whether you’re supporting your family or saving for something big, Uber gives you the freedom to get behind the wheel when it makes sense for you. Choose when you drive, where you go, and who you pick up.</p>
+  </div>
+</article>
+  </section>
+  <section>
 
-           
+  <footer></footer>
+</section>
 
-<script src="./js/bootstrap.min.js"></script>
+    </section>
 
-
-</html>
-
+</body></html>

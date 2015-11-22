@@ -1,219 +1,99 @@
-//driver
-var driverSchema = require('./model/driverSchema');
-var requestGen = require('./commons/responseGenerator');
+var mysql=require('./mysql');
+var mongo=require('./mongo/createDriver');
+var Driver = mongo.Driver;
 
-var Driver = driverSchema.Driver; //mysql instance
-var Drivers = driverSchema.Drivers; //mongoDB instance
+function signupDriver(msg, callback){
 
-exports.registerDriver = function (msg, callback) {
-
-    var email = msg.email;
+	var driver_id = msg.driver_id;
+	var email = msg.email;
     var password = msg.password;
-    var firstName = msg.firstName;
-    var lastName = msg.lastName;
+    var firstname = msg.firstName;
+    var lastname = msg.lastName;
     var address = msg.address;
     var city = msg.city;
     var state = msg.state;
-    var zipCode = msg.zipCode;
-    var phoneNumber = msg.phoneNumber;
-    var carDetails = msg.carDetails;
-
-    var json_responses;
-
-    //add data in mysql
-    Driver.create({
-        //id - autoIncrement by default by sequelize
-        email: email,
-        password: password,
-        firstName: firstName,
-        lastName: lastName,
-        address: address,
-        city: city,
-        state: state,
-        zipCode: zipCode,
-        phoneNumber: phoneNumber,
-        carDetails: carDetails
-    }).then(function () {
-        //add data in mongodb
-        var newDriver = new Drivers({
-            firstName: firstName,
-            lastName: lastName,
-            email: email
+    var zipcode = msg.zipCode;
+    var phonenumber = msg.phoneNumber;
+    var d_car_number = msg.d_car_number;
+    var d_car_name = msg.d_car_name;
+    
+    var response;
+   
+    var sqlQuery="INSERT INTO driver_info  VALUES (" + 
+	"'"	+ driver_id + "'," +
+	"'" + firstname + "'," +
+	"'" + lastname + "'," +
+	"'" + address+ "'," +
+	"'" + city + "'," +
+	"'" + state + "'," +
+	"'" + zipcode + "'," +
+	"'" + phonenumber + "'," +
+	"'" + email + "'," +
+	"'" + d_car_name + "'," +
+	"'" + d_car_number + "'," +
+	"'" + password+ "')";
+    mysql.fetchData(function(err,result){
+	if(err)
+		{ response =({status:500,message: "Driver! Registeration failed" });
+		callback(null,response);
+		}
+	else{
+		var createMongoDriver = new Driver({
+			driver_id: driver_id,
+			d_email: email,
+			d_first_name: firstname,
+			d_last_name: lastname
         });
 
-        newDriver.save(function (err) {
+		createMongoDriver.save(function(err) {
 
             if (err) {
-                json_responses = requestGen.responseGenerator(500, {message: "error registering driver"});
+                response =({status:500,message: "Driver! Registeration failed" });
             }
             else {
-                json_responses = requestGen.responseGenerator(200, {message: "driver registration successfull"});
+               response = ({status:200,message: "Driver! Registeration Succesful" });
+               callback(null, response);
             }
-            callback(null, json_responses);
-        });
+            
+            
+         });
+		}
+		},sqlQuery);
+	}
+function loginDriver(msg,callback){
+	var driver_id = msg.driver_id;
+	var password = msg.password;
+	var response;
+	var sqlQuery="select * from driver_info where driver_id='"+driver_id+"' and d_password='" + password +"'";
+	 mysql.fetchData(function(err,result){
+			if(err)
+				{ response =({status:500, message: "Driver! Login failed" });
+				callback(null,response);
+				}
+			else{
+				if(result.length>0)
+					{
+					response =({status:200, message: "Driver! Login Successful" });
+					callback(null,response);
+					}
+				else{
+					response =({status:500, message: "Driver! Login failed" });
+					callback(null,response);
+				}
+				}
+		        },sqlQuery);
+}	
+function handleRequest(msg,callback){
+	switch(msg.type)
+	{
+		case "signupDriver":
+			signupDriver(msg,callback);
+			break;
+		case "loginDriver":
+			loginDriver(msg,callback);
+			break;
+	}
+	return;
+}     
 
-    });
-
-};
-
-
-exports.loginDriver = function (msg, callback) {
-
-    var email = msg.email;
-    var password = msg.password;
-
-    var json_responses;
-
-    Driver.findOne({where: {email: email, password: password}}).then(function (user) {
-
-        if (user) {
-            json_responses = requestGen.responseGenerator(200, {message: 'driver login successful', user: user.email});
-        }
-        else {
-            json_responses = requestGen.responseGenerator(500, {message: 'driver login failed'});
-        }
-        callback(null, json_responses);
-    });
-
-};
-
-exports.searchDriver = function (msg, callback) {
-
-    var search = msg.search;
-
-    Driver.find({
-        where: {
-            $or: [{
-                email: {$like: '%' + search + '%'}
-            }, {
-                password: {$like: '%' + search + '%'}
-            }, {
-                firstName: {$like: '%' + search + '%'}
-            }, {
-                lastName: {$like: '%' + search + '%'}
-            }, {
-                address: {$like: '%' + search + '%'}
-            }, {
-                city: {$like: '%' + search + '%'}
-            }, {
-                state: {$like: '%' + search + '%'}
-            }, {
-                zipCode: {$like: '%' + search + '%'}
-            }, {
-                phoneNumber: {$like: '%' + search + '%'}
-            }, {
-                carDetails: {$like: '%' + search + '%'}
-            }
-            ]
-        }
-    }).then(function (drivers) {
-        var json_responses;
-        if (drivers) {
-            json_responses = requestGen.responseGenerator(200, drivers);
-        }
-        else {
-            json_responses = requestGen.responseGenerator(500, {message: 'No driver details found.'});
-        }
-        callback(null, json_responses);
-    });
-};
-
-exports.deleteDriver = function (msg, callback) {
-    var email = msg.email;
-    var json_responses;
-
-    Driver.destroy({
-            where: {
-                email: email
-            }
-        }
-    ).then(function (affectedRows) {
-            {
-                if (affectedRows > 0) {
-                    Drivers.remove({email: email}, function (err, removed) {
-                        if (err) {
-                            json_responses = requestGen.responseGenerator(500, {message: 'driver delete failed'});
-                        }
-                        else {
-                            if (removed.result.n > 0) {
-                                json_responses = requestGen.responseGenerator(200, {message: 'Driver Deleted.'});
-                            } else {
-                                json_responses = requestGen.responseGenerator(500, {message: 'No Driver Found'});
-                            }
-                        }
-                        callback(null, json_responses);
-                    });
-                } else {
-                    json_responses = requestGen.responseGenerator(500, {message: 'No Driver Found'});
-                    callback(null, json_responses);
-                }
-            }
-        }
-    );
-};
-
-exports.getDriverInformation = function (msg, callback) {
-    var email = msg.email;
-
-    Driver.findOne({
-        where: {
-            email: email
-        }
-    }).then(function (driver) {
-        var json_responses;
-        if (driver) {
-            json_responses = requestGen.responseGenerator(200, driver);
-        } else {
-            json_responses = requestGen.responseGenerator(500, {message: "No Driver found"});
-        }
-        callback(null, json_responses)
-    });
-};
-
-exports.updateDriver = function (msg, callback) {
-
-    var email = msg.email;
-    var password = msg.password;
-    var firstName = msg.firstName;
-    var lastName = msg.lastName;
-    var address = msg.address;
-    var city = msg.city;
-    var state = msg.state;
-    var zipCode = msg.zipCode;
-    var phoneNumber = msg.phoneNumber;
-    var carDetails = msg.carDetails;
-
-    var json_responses;
-
-    Driver.update({
-        password: password,
-        firstName: firstName,
-        lastName: lastName,
-        address: address,
-        city: city,
-        state: state,
-        zipCode: zipCode,
-        phoneNumber: phoneNumber,
-        carDetails: carDetails
-    }, {where: {email: email}}).then(function (driver) {
-
-        if(driver) {
-            Driver.findOne({
-                where: {
-                    email: email
-                }
-            }).then(function (driver) {
-                var json_responses;
-                if (driver) {
-                    json_responses = requestGen.responseGenerator(200, driver);
-                } else {
-                    json_responses = requestGen.responseGenerator(500, {message: "No Driver found"});
-                }
-                callback(null, json_responses)
-            });
-        }else{
-            json_responses = requestGen.responseGenerator(500, {message: "No Driver found"});
-            callback(null, json_responses);
-        }
-    });
-};
+exports.handleRequest=handleRequest;

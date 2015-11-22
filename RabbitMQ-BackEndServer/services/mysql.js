@@ -1,11 +1,36 @@
-//connecting mysql using sequelize
-//Do not commit this file on github as all system will have different configuration 
-var Sequelize = require('sequelize');
 
-var sequelize = new Sequelize('uber_db', 'root', '', {
-	host: '127.0.0.1',
-	dialect: 'mysql', 
-	port: '3307'
-});
+var mysql = require('mysql');
 
-exports.sequelize = sequelize;
+function getConnection(){
+	var connection = mysql.createConnection({
+	    host     : '127.0.0.1',
+	    user     : 'root',
+	    password : '',
+	    database : 'uber_db',
+	    port	 : 3307
+	});
+	return connection;
+}
+
+
+function fetchData(callback,sqlQuery){
+	
+	console.log("\nSQL Query::"+sqlQuery);
+	
+	var connection=getConnection();
+	
+	connection.query(sqlQuery, function(err, rows, fields) {
+		if(err){
+			console.log("ERROR: " + err.message);
+		}
+		else 
+		{	// return err or result
+			console.log("DB Results:"+rows);
+			callback(err, rows);
+		}
+	});
+	console.log("\nConnection closed..");
+	connection.end();
+}	
+
+exports.fetchData=fetchData;
