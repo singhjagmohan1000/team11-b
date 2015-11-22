@@ -66,8 +66,8 @@ function signupCustomer(req,res){
 	var customer_id= req.param('customer_id');
 	var email = req.param('email');
     var password = req.param('password');
-    var firstName = req.param('firstName');
-    var lastName = req.param('lastName');
+    var firstName = req.param('first_name');
+    var lastName = req.param('last_name');
     var address = req.param('address');
     var city = req.param('city');
     var state = req.param('state');
