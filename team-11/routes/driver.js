@@ -44,6 +44,7 @@ function login(req,res){
 
 
 function loginDriver(req,res){
+	
 	var driver_id = req.param('driver_id');
     var password = req.param('password');
     var msg_payload = {
@@ -51,17 +52,18 @@ function loginDriver(req,res){
             "password" : password,
             "type": "loginDriver"
         };
-mq_client.make_request('driver_queue', msg_payload, function(err,results) {
+    mq_client.make_request('driver_queue', msg_payload, function(err,results) {
         
         if (err) {
             console.log(err);
             res.send(err);
-        } else {
+        } 
+        else {
             console.log("Login Driver results" + results);
             
             console.log(results.message);
-            	res.send(results);
-            	}
+            res.send(results);
+        }
     });
 }
 
