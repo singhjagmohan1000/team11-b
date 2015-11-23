@@ -41,6 +41,8 @@ function login(req,res){
 			});
 
 }
+
+
 function loginDriver(req,res){
 	var driver_id = req.param('driver_id');
     var password = req.param('password');
@@ -62,6 +64,8 @@ mq_client.make_request('driver_queue', msg_payload, function(err,results) {
             	}
     });
 }
+
+
 function signupDriver(req,res){
 	var driver_id= req.param('driver_id');
 	var email = req.param('d_email');
@@ -76,7 +80,51 @@ function signupDriver(req,res){
     var d_car_number = req.param('d_car_number');
     var d_car_name = req.param('d_car_name');
     var response;
- var msg_payload = {
+    
+    var driver_id_validate = /^[0-9]{3}\-[0-9]{2}\-[0-9]{4}$/;
+    var car_number_validate = /^[0-9][a-z]{3}[0-9]{3}$/;
+    var email_validate = /\S+@\S+\.\S+/;
+    var zipCode_validate = new RegExp("^\\d{5}(-\\d{4})?$");
+    
+    
+    if(!driver_id_validate.test(driver_id)){
+    	
+    	console.log("in IF. invalid SSN");
+    	res.end("invalid driver_id");
+    	return;
+    }
+    
+    if(!car_number_validate.test(d_car_number)){
+    	
+    	console.log("In IF invalid registration number");
+    	res.end("In IF invalid registration number");
+    	return;     	
+    }
+    
+    if(!email_validate.test(email)){
+    	
+    	console.log("In IF invalid EMAIL");
+    	res.end("In IF invalid EMAIL");
+    	return;    	
+    }
+    
+    if(!zipCode_validate.test(zipCode)){
+    	
+    	console.log("In IF invalid ZIPCODE");
+    	res.end("In IF invalid ZIPCODE");
+    	return;    	
+    }
+    
+    if(phoneNumber.toString().length != 10){
+    	
+    	console.log("In IF invalid PHONE");
+    	res.end("In IF invalid PHONE");
+    	return;     	
+    }
+    
+    
+    
+    var msg_payload = {
     	"driver_id":driver_id,
         "email" : email,	
         "password" : password,
