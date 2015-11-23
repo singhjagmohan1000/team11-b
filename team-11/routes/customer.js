@@ -22,22 +22,20 @@ function signup(req,res){
 
 function login(req,res){
 	
-	ejs.renderFile('./views/loginCustomer.ejs',function(err,result)
-			{
-				if(!err) 
-				{
-					res.end(result);
-			    }
-			    // render or error
-			    else 
-			    {
-			    	res.render('error');
-			    	console.log(err);
-			    }
-			});
-
+	ejs.renderFile('./views/loginCustomer.ejs',function(err,result){
+		if(!err){
+			res.end(result);
+	    }
+		else{
+			res.render('error');
+			console.log(err);
+		}
+	});
 }
+
+
 function loginCustomer(req,res){
+	
 	var customer_id = req.param('customer_id');
     var password = req.param('password');
     var msg_payload = {
@@ -45,25 +43,25 @@ function loginCustomer(req,res){
             "password" : password,
             "type": "loginCustomer"
         };
-mq_client.make_request('customer_queue', msg_payload, function(err,results) {
+    mq_client.make_request('customer_queue', msg_payload, function(err,results) {
         console.log(results);
         if (err) {
             console.log(err);
             res.send(err);
-        } else {
+        } 
+        else {
             console.log("Login results" + results);
             
             console.log(results.message);
-            	res.send(results);
-            
-            
+           	res.send(results);
         }
     });
-    
-
 }
+
+
 function signupCustomer(req,res){
-	var customer_id= req.param('customer_id');
+	
+	var customer_id = req.param('customer_id');
 	var email = req.param('email');
     var password = req.param('password');
     var firstName = req.param('first_name');
@@ -79,8 +77,49 @@ function signupCustomer(req,res){
     var month = req.param('month');
     var year = req.param('year');
 
+    var customer_id_validate = /^[0-9]{3}\-[0-9]{2}\-[0-9]{4}$/;
+    var email_validate = /\S+@\S+\.\S+/;
+    var zipCode_validate = new RegExp("^\\d{5}(-\\d{4})?$");
     
-
+    
+    if(!customer_id_validate.test(customer_id)){
+    	
+    	console.log("in IF. invalid SSN");
+    	res.end("invalid customer_id");
+    	return;
+    }
+    
+    
+    if(!email_validate.test(email)){
+    	
+    	console.log("In IF invalid EMAIL");
+    	res.end("In IF invalid EMAIL");
+    	return;    	
+    }
+    
+    
+    if(!zipCode_validate.test(zipCode)){
+    	
+    	console.log("In IF invalid ZIPCODE");
+    	res.end("In IF invalid ZIPCODE");
+    	return;    	
+    }
+        
+    if(phoneNumber.toString().length != 10){
+    	
+    	console.log("In IF invalid PHONE");
+    	res.end("In IF invalid PHONE");
+    	return;     	
+    }
+    
+    if(cc_number.toString().length > 15 && cc_number.toString().length < 20){
+    	
+    	console.log("In IF invalid Card Number");
+    	res.end("In IF invalid card number");
+    	return;     	
+    }
+    
+        
     var msg_payload = {
     	"customer_id":customer_id,
         "email" : email,	
@@ -114,6 +153,9 @@ function signupCustomer(req,res){
         }
     });
 }
+
+
+
 exports.login=login;
 exports.loginCustomer=loginCustomer;
 exports.signupCustomer=signupCustomer;
