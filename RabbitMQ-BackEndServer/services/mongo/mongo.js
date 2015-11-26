@@ -34,7 +34,7 @@
 //};
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/uber_db');
+mongoose.connect('mongodb://localhost:27017/uber_db');
 var db = mongoose.connection;
 
 db.on('error', console.error);

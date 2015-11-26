@@ -1,74 +1,69 @@
 
 var mq_client = require('../rpc/client');
-
-var ejs= require('ejs');
-
-
+var ejs = require('ejs');
 
 
 function signup(req,res){
 	
-	ejs.renderFile('./views/signupDriver.ejs',function(err,result)
-	{
-		if(!err) 
-		{
-			res.end(result);
-	    }
-	    // render or error
-	    else 
-	    {
-	    	res.render('error');
-	    	console.log(err);
-	    }
-	});
-
+	if(req.session.driver_id){
+		
+		res.render("driverhome");
+	}
+	else{
+		
+		res.render("signupDriver");
+	}
 }
+
 
 function login(req,res){
 	
-	ejs.renderFile('./views/loginDriver.ejs',function(err,result)
-			{
-				if(!err) 
-				{
-					res.end(result);
-			    }
-			    // render or error
-			    else 
-			    {
-			    	res.render('error');
-			    	console.log(err);
-			    }
-			});
-
+	if(req.session.driver_id){
+		
+		res.render("driverhome");
+	}
+	else{
+		
+		res.render("loginDriver");
+	}
 }
 
 
 function loginDriver(req,res){
-	
-	var driver_id = req.param('driver_id');
+	var fieldState = {email: 'VALID', password: 'VALID'};
+	var email = req.param('email');
     var password = req.param('password');
-    var msg_payload = {
-        	"driver_id": driver_id,	
-            "password" : password,
-            "type": "loginDriver"
-        };
+    
+    var msg_payload = {"email": email, "password" : password, "type": "loginDriver"};
+    
     mq_client.make_request('driver_queue', msg_payload, function(err,results) {
         
-        if (err) {
+        if (err){
             console.log(err);
             res.send(err);
         } 
         else {
-            console.log("Login Driver results" + results);
-            
-            console.log(results.message);
-            res.send(results);
+        	
+            if(results.status == 200){
+            	
+            	console.log("IN IF OF DRIVER LOGIN");
+            	req.session.driver_id = results.driver_id;
+            	res.status(200).send("success");
+            	//res.render("driverhome");
+            }            
+            else{
+            	
+            	console.log("IN ELSE OF DRIVER LOGIN");
+            	
+            	res.status(404).send({loginDrive:results.message});           	         	
+            }
         }
     });
 }
 
 
 function signupDriver(req,res){
+	
 	var driver_id= req.param('driver_id');
 	var email = req.param('d_email');
     var password = req.param('d_password');
@@ -127,6 +122,7 @@ function signupDriver(req,res){
     
     
     var msg_payload = {
+    		
     	"driver_id":driver_id,
         "email" : email,	
         "password" : password,
@@ -139,24 +135,80 @@ function signupDriver(req,res){
         "phoneNumber" : phoneNumber,
         "d_car_number" : d_car_number,
         "d_car_name" : d_car_name,
-        "type":"signupDriver"
-      
+        "type":"signupDriver"      
     };
 
     mq_client.make_request('driver_queue', msg_payload, function(err,results) {
-        console.log(results);
+    	
+        
         if (err) {
-            console.log(err);
-           
-        } else {
-            console.log("about results" + results);
-            console.log(response.message);
-            	res.render('loginDriver');
+        	
+            console.log(err);           
+        } 
+        else{
+        	
+        	if(results.status == 200){
+        	
+        		console.log("in ELSE of driver signup about results" + JSON.stringify(results));
+        		console.log("successful login");
+        		res.render('loginDriver');
+        	}
+        	else{
+        		
+        		res.end(results.message);
+        	}
             
         }
     });
 }
-exports.login=login;
-exports.loginDriver=loginDriver;
-exports.signupDriver=signupDriver;
-exports.signup=signup;
+
+
+exports.getdriverdetails = function(req,res){
+	
+	
+	var msg_payload = {"driver_id": req.session.driver_id, "type": "getdriverdetails"};
+    
+    mq_client.make_request('driver_queue', msg_payload, function(err,results) {
+        
+        if (err) {
+            console.log(err);
+            res.send(err);
+        } 
+        else {
+        	
+            console.log("Driver details" + JSON.stringify(results));            
+            res.end(JSON.stringify(results));
+        }
+    });
+}
+
+
+exports.driver_deleteself = function(req,res){
+	
+	
+	var msg_payload = {"driver_id": req.session.driver_id, "type": "driver_deleteself"};
+    
+    mq_client.make_request('driver_queue', msg_payload, function(err,results) {
+        
+        if (err) {
+            console.log(err);
+            res.send(err);
+        } 
+        else {
+        	
+            console.log("Driver deleted" + JSON.stringify(results));  
+            req.session.destroy();
+            res.end();
+        }
+    });
+}
+
+
+
+
+
+
+exports.login = login;
+exports.loginDriver = loginDriver;
+exports.signupDriver = signupDriver;
+exports.signup = signup;

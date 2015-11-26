@@ -1,14 +1,18 @@
 
+
 var amqp = require('amqp'), util = require('util');
 
 var customer = require('./services/customer');
 var driver = require('./services/driver');
+var admin = require('./services/admin');
 
 
 var cnn = amqp.createConnection({
 	host : '127.0.0.1'
 });
 
+var mongoose = require('mongoose');
+var connection = mongoose.createConnection("mongodb://localhost:27017/uber_db");
 
 
 cnn.on('ready', function(){
@@ -47,4 +51,41 @@ cnn.on('ready', function(){
 			});
 		});
 	});
+	console.log("listening on admin_queue");
+	cnn.queue('admin_queue', function(q){
+		q.subscribe(function(message, headers, deliveryInfo, m){
+			util.log(util.format( deliveryInfo.routingKey, message));
+			util.log("Message: "+JSON.stringify(message));
+			util.log("DeliveryInfo: "+JSON.stringify(deliveryInfo));
+			admin.handleRequest(message, function(err,res){
+				console.log("Listening admin_queue"+message);
+				//return index sent
+				cnn.publish(m.replyTo, res, {
+					contentType:'application/json',
+					contentEncoding:'utf-8',
+					correlationId:m.correlationId
+				});
+			});
+		});
+	});
+	
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

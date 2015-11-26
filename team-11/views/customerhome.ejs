@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<title>Driver HOME</title>
+
+</head>
+
+<body ng-app = "" ng-controller = "appController">
+
+	<div class="container">
+
+		<div class="row">
+
+			<h2>HELLO DRIVER</h2>
+			
+			
+		</div>
+		
+		<div>
+			
+			<button ng-click = "customer_deleteself()">delete my account</button>
+		
+		
+		</div>
+
+	</div>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>		
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
+    <script>
+    
+        function appController($scope, $http) {
+        	
+            $http({method: 'GET', url: '/getdriverdetails'}).then(function successCallback(response) {
+            		    
+            		alert("received driver details : " + JSON.stringify(response));
+            			    	
+            }, function errorCallback(response) {});
+            
+            
+            
+
+            $scope.customer_deleteself = function(){
+            	
+            	alert("deleting customer self");
+            	$http({method: 'GET', url: '/customer_deleteself'}).then(function successCallback(response) {
+        		    
+            		alert("customer self deleted..");    
+            		window.location.assign("/customerhome");
+            			    	
+            	}, function errorCallback(response) {});           	
+            	
+            }
+            
+            
+            
+            
+        };
+    </script>
+	
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
