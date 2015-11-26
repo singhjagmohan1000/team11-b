@@ -17,7 +17,7 @@ function handleRequest(msg,callback){
 			customer_deleteself(msg,callback);
 			break;
 	}
-	return;
+	
 }     
 
 
@@ -70,8 +70,7 @@ function signupCustomer(msg, callback){
     
     
     mysql.fetchData(function(err,result){
-    	
-        console.log("IN FETCHDATA TO CHECK DUPLICATE");
+    
     	if(err){ 
     		
     		response =({status:500,message: "Customer! Registeration failed" });
@@ -80,7 +79,7 @@ function signupCustomer(msg, callback){
     	}
     	else{
     		
-    		console.log("IN FETCHDATA TO CHECK DUPLICATE IN ELSE");
+    		//console.log("IN FETCHDATA TO CHECK DUPLICATE IN ELSE");
     		if(result.length > 0){
     			
     			response =({status:300, message: "Customer with this ID already exists" });
@@ -89,23 +88,37 @@ function signupCustomer(msg, callback){
     		}
     		else{
     			
-    			console.log("IN FETCHDATA NO DUPLICATE RECORD");
+    			//console.log("IN FETCHDATA NO DUPLICATE RECORD");
     			
     			mysql.fetchData(function(err,result){
     				
-    				console.log("IN SECOND FETCHDATA TO INSERTING CUSTOMER");
+    				//console.log("IN SECOND FETCHDATA TO INSERTING CUSTOMER");
     				if (err) {
     					
     	                response =({status:500,message: "Customer! Registeration failed" });
-    	                console.log("IN FETCHDATA TO INSERTION FAILED");
+    	                //console.log("IN FETCHDATA TO INSERTION FAILED");
     	                callback(null,response);
     	            }
-    	            else {
-    	            	
-    	               response = ({status:200,message: "CUSTOMER! Registeration Succesful" });
-    	               console.log("CUSTOMER INSERTED TO MYSQL");
-    	               callback(null, response);
+    	            else {var createMongoCustomer = new Customer({
+    	    			customer_id: customer_id,
+    	    			c_email: email,
+    	    			c_first_name: firstname,
+    	    			c_last_name: lastname
+    	            });
 
+    	    		createMongoCustomer.save(function(err) {
+
+    	                if (err) {
+    	                   throw err;
+
+    	                }
+    	                else {
+    	                   response = ({status:200, message: "Customer! Registeration Succesful" });
+    	                   callback(null, response);
+    	                }
+    	                
+    	                
+    	             });
     	            }     	
     			},sqlQuery);
     		}
@@ -191,24 +204,4 @@ function customer_deleteself(msg,callback){
 
 
 exports.handleRequest=handleRequest;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

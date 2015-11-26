@@ -9,11 +9,8 @@ var http = require('http');
 var path = require('path');
 
 
-//var expressSession = require("express-session");
-//var mongoStore = require("connect-mongo")(expressSession);
-//var mongo = require("./routes/mongo");
-
-
+var expressSession = require("express-session");
+var mongoStore = require("connect-mongo")(expressSession);
 var mongoose = require('mongoose');
 var connection = mongoose.connect("mongodb://localhost:27017/uber_db");
 
@@ -47,6 +44,7 @@ if ('development' === app.get('env')) {
 
 app.get('/', routes.index);
 
+//adminModule
 app.get('/admin', admin.login);
 app.post('/admin', admin.loginAdmin);
 
@@ -70,28 +68,26 @@ app.get('/admin_getcustomerprofile', admin.admin_getcustomerprofile);
 
 app.post('/admin_searchdriver', admin.admin_searchdriver);
 
+//customerModule
 app.get('/loginCustomer',customer.login);
 app.post('/loginCustomer',customer.loginCustomer);
 app.get('/signupCustomer',customer.signup);
 app.post('/signupCustomer',customer.signupCustomer);
-
 app.get('/customer_deleteself', customer.customer_deleteself);
 app.get('/customerhome', customer.login);
 
 
-
+//drivrModule
 app.get('/loginDriver',driver.login);
 app.post('/loginDriver',driver.loginDriver);
 app.get('/signupDriver',driver.signup);
 app.post('/signupDriver',driver.signupDriver);
-
 app.get('/driver_deleteself', driver.driver_deleteself);
 app.get('/driverhome', driver.login);
-
 app.get('/getdriverdetails', driver.getdriverdetails);
 
 
-
+//Logout API
 app.post('/signout', function(req,res){
 	
 	req.session.destroy();	

@@ -14,16 +14,16 @@
 </head>
 <style>
 .has-error .form-control {
-	border: 1px solid #f00;
+	border: 1px solid #ed145b;
 	background: #ffe5e5;
 }
 
 .has-error .control-label, .has-error .alert {
-	color: red;
+	color: #ed145b;
 }
 
 .red {
-	color: red;
+	color: #ed145b;
 }
 </style>
 <body style="background-color: #00001a">
@@ -45,7 +45,7 @@
 
 				<div data-ng-app="loginDriverApp"
 					data-ng-controller="loginDriverController">
-					<form class="form-vertical" name="loginDrive" novalidate>
+					<form class="form-vertical" name="loginDrive" novalidate data-ng-submit="loginDrive.$valid && loginDriver()">
 
 						<h1 style="color: #fff; text-align: center; font-size: 40px;">U
 							B E R</h1>
@@ -93,8 +93,8 @@
 						</div>
 						<div class="form-group">
 							<button type="submit" class="btn btn-info"
-								style="padding: 16px 154px; font-size: 14px;"
-								data-ng-click="loginDriver()">LOG IN</button>
+								style="padding: 16px 124px; font-size: 14px;"
+								data-ng-click="loginDrive.submitted=true">LOG IN</button>
 						</div>
 					</form>
 				</div>
@@ -108,12 +108,6 @@
 	app.controller('loginDriverController', function($http, $scope, $parse) {
 
 		$scope.loginDriver = function() {
-			if ($scope.loginDrive.$invalid) {
-				
-				$scope.loginDrive.submitted = true;
-			}
-
-			else {
 				$http({
 					method : 'POST',
 					url : '/loginDriver',
@@ -143,7 +137,7 @@
 							}
 						});
 			}
-		}
+		
 	});
 </script>
 </html>

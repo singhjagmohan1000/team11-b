@@ -1,5 +1,4 @@
 
-
 var amqp = require('amqp'), util = require('util');
 
 var customer = require('./services/customer');
@@ -10,10 +9,10 @@ var admin = require('./services/admin');
 var cnn = amqp.createConnection({
 	host : '127.0.0.1'
 });
-
 var mongoose = require('mongoose');
-var connection = mongoose.createConnection("mongodb://localhost:27017/uber_db");
-
+var connection = mongoose.connect("mongodb://localhost:27017/uber_db");
+var redis = require('redis');
+var client = redis.createClient();
 
 cnn.on('ready', function(){
 	console.log("listening on customer_queue");
@@ -63,29 +62,8 @@ cnn.on('ready', function(){
 				cnn.publish(m.replyTo, res, {
 					contentType:'application/json',
 					contentEncoding:'utf-8',
-					correlationId:m.correlationId
-				});
+					correlationId:m.correlationId				});
 			});
 		});
 	});
-	
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

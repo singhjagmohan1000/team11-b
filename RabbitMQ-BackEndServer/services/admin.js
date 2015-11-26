@@ -3,50 +3,6 @@ var mongo = require('./mongo/createDriver');
 var Driver = mongo.Driver;
 
 
-function handleRequest(msg,callback){
-	
-	switch(msg.type)
-	{
-		case "loginAdmin":
-			loginAdmin(msg,callback);
-			break;			
-		case "getpendingdrivers":
-			getpendingdrivers(msg,callback);
-			break;
-		case "getapproveddrivers":
-			getapproveddrivers(msg,callback);
-			break;
-		case "approvedriver":
-			approvedriver(msg,callback);
-			break;
-		case "admin_getdriverprofile":
-			admin_getdriverprofile(msg,callback);
-			break;
-		case "deletedriver":
-			deletedriver(msg,callback);
-			break;
-		case "getpendingcustomers":
-			getpendingcustomers(msg,callback);
-			break;
-		case "getapprovedcustomers":
-			getapprovedcustomers(msg,callback);
-			break;
-		case "approvecustomer":
-			approvecustomer(msg,callback);
-			break;
-		case "admin_getcustomerprofile":
-			admin_getcustomerprofile(msg,callback);
-			break;
-		case "admin_searchdriver":
-			admin_searchdriver(msg,callback);
-			break;	
-		case "deletecustomer":
-			deletecustomer(msg,callback);
-			break;
-	}
-	return;
-}
-
 
 function loginAdmin(msg,callback){
 	
@@ -368,17 +324,49 @@ function admin_searchdriver(msg,callback){
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
+function handleRequest(msg,callback){
+	
+	switch(msg.type)
+	{
+		case "loginAdmin":
+			loginAdmin(msg,callback);
+			break;			
+		case "getpendingdrivers":
+			getpendingdrivers(msg,callback);
+			break;
+		case "getapproveddrivers":
+			getapproveddrivers(msg,callback);
+			break;
+		case "approvedriver":
+			approvedriver(msg,callback);
+			break;
+		case "admin_getdriverprofile":
+			admin_getdriverprofile(msg,callback);
+			break;
+		case "deletedriver":
+			deletedriver(msg,callback);
+			break;
+		case "getpendingcustomers":
+			getpendingcustomers(msg,callback);
+			break;
+		case "getapprovedcustomers":
+			getapprovedcustomers(msg,callback);
+			break;
+		case "approvecustomer":
+			approvecustomer(msg,callback);
+			break;
+		case "admin_getcustomerprofile":
+			admin_getcustomerprofile(msg,callback);
+			break;
+		case "admin_searchdriver":
+			admin_searchdriver(msg,callback);
+			break;	
+		case "deletecustomer":
+			deletecustomer(msg,callback);
+			break;
+	}
+	return;
+}
 exports.handleRequest=handleRequest;
 
 

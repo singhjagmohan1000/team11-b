@@ -10,7 +10,7 @@
 </head>
 <style>
   .has-error .form-control {
-border:1px solid #f00;
+border:1px solid #ed145b;
 background: #ffe5e5;
 } 
 
@@ -18,11 +18,11 @@ background: #ffe5e5;
 
 .has-error .alert
  {
-color:red;
+color:#ed145b;
 } 
 .red
 {
-color:red;
+color:#ed145b;
 }
 
 
@@ -44,7 +44,7 @@ color:red;
 
 
 	<div data-ng-app="loginCustApp" data-ng-controller="loginCustController">
-          <form   class="form-vertical"  name="loginCust" novalidate>
+          <form   class="form-vertical"  name="loginCust" novalidate data-ng-submit="loginCust.$valid && loginCustomer()">
 
             		<h1 style="color:#fff; text-align:center; font-size:40px;">U B E R </h1><hr>
 		
@@ -65,7 +65,7 @@ color:red;
                 <div class="alert alert-danger"  data-ng-show="(loginCust.submitted||loginCust.password.$touched) && loginCust.password.$error.required"><span class="glyphicon glyphicon-remove red" aria-hidden="true"></span>Password required.</div>
               </div>
 		<div class="form-group">
-                   <button type="submit" class="btn btn-info" style = "padding : 16px 154px; font-size:14px;" data-ng-click="loginCustomer()">LOG IN</button>
+                   <button type="submit" class="btn btn-info" style = "padding : 16px 124px; font-size:14px;" data-ng-click="loginCust.submitted=true">LOG IN</button>
            </div>
 	</form>
 </div>
@@ -81,11 +81,7 @@ color:red;
   
      
     $scope.loginCustomer=function(){
-      if($scope.loginCust.$invalid){
-        $scope.loginCust.submitted=true;
-      }
-      
-      else{
+   alert("hiii");
         $http({
             method: 'POST',
             url: '/loginCustomer',
@@ -95,7 +91,7 @@ color:red;
               alert("Hello");
               window.location.assign('/customerhome');
                 
-      		},function(response){
+      		},function(response){alert("tr");
        for (var fieldName in response.data) {
                      var message = response.data[fieldName];
                      
@@ -107,7 +103,7 @@ color:red;
              }
       }); 
       } 
-    }
+    
   });
 </script>
 </html>
