@@ -93,7 +93,6 @@
 
 			<h2>HELLO DRIVER</h2>
 			
-			
 		</div>
 		
 		
@@ -102,15 +101,45 @@
      	
     	<div id="map"></div>
 		
+		<div>
+			
+			{{driver.driver_id}} {{driver.d_first_name}} {{driver.d_last_name}} {{driver.d_car_number}} 
+			<button ng-click = "driver_deleteself()">delete my account</button>
+		
+		</div>
+		
+		<form method = "GET" action = "/signout">
+			<button type = "submit">Sign Out</button>		
+		</form>	
+		
 		
 		
 		<div>
-			
-			<button ng-click = "driver_deleteself()">delete my account</button>
+			email <input ng-model = "driver.d_email">
+			firstname <input ng-model = "driver.d_first_name">
+			lastname <input ng-model = "driver.d_last_name">
+			address <input ng-model = "driver.d_address">
+			city <input ng-model = "driver.d_city">
+			state <input ng-model = "driver.d_state">
+			zipcode <input ng-model = "driver.d_zipcode">
+			phonenumber <input ng-model = "driver.d_phonenumber">
+			password <input ng-model = "driver.d_password">
+			car name <input ng-model = "driver.d_car_name">
+			car number <input ng-model = "driver.d_car_number">
 		
+		<button ng-click = "updatedriver()">Update driver record</button>
 		
 		</div>
-
+		
+		
+		
+		<form name="pet_form" action="/imageupload" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate style="padding:0 0 0 50px">
+     				
+     		Select image <input type="file" file-model="pt_file" name="pt_file" style="margin:0 0 0 -15px;">
+			<input type="submit" class="btn btn-primary login-btn" style="width:250px;margin:0 0 0 5px;" value="Upload Submit" name="Submit">
+         		
+		</form>
+		
 	</div>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -120,11 +149,28 @@
     
         function appController($scope, $http) {
         	
+        	$scope.driver = {};
+        	
+        	
             $http({method: 'GET', url: '/getdriverdetails'}).then(function successCallback(response) {
             		    
-            		//alert("received driver details : " + JSON.stringify(response));
+            		alert("received driver details : " + JSON.stringify(response));
+            		$scope.driver = response.data[0];
             			    	
             }, function errorCallback(response) {});
+            
+            
+            
+			$scope.updatedriver = function(){
+            	
+            	alert("updating record");
+            	$http({method: 'POST', url: '/updatedriver', data: $scope.driver}).then(function successCallback(response) {
+        		    
+            		alert("driverinfo updated..");            		
+            			    	
+            	}, function errorCallback(response) {});
+            }
+            
             
             
             $scope.driver_deleteself = function(){
@@ -135,13 +181,8 @@
             		alert("driver self deleted..");
             		window.location.assign('/driverhome');
             			    	
-            	}, function errorCallback(response) {});           	
-            	
+            	}, function errorCallback(response) {});
             }
-            
-            
-            
-            
         };
     </script>
     

@@ -10,8 +10,8 @@ var ride = require('./services/ride'); // Added by Prajwal Kondawar - 23/Nov/201
 var cnn = amqp.createConnection({
 	host : '127.0.0.1'
 });
-//var mongoose = require('mongoose');
-//var connection = mongoose.connect("mongodb://localhost:27017/uber_db");
+var mongoose = require('mongoose');
+var connection = mongoose.connect("mongodb://localhost:27017/uber_db");
 //var redis = require('redis');
 //var client = redis.createClient();
 

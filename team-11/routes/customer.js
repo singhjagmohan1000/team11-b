@@ -32,7 +32,7 @@ function loginCustomer(req,res){
 	
 	var email = req.param('email');
     var password = req.param('password');
-    var msg_payload = {"email":email, "password" : password, "type": "loginCustomer"};
+    var msg_payload = {"email": email, "password" : password, "type": "loginCustomer"};
     
     mq_client.make_request('customer_queue', msg_payload, function(err,results) {
     	        
@@ -57,8 +57,6 @@ function loginCustomer(req,res){
 
 
 function signupCustomer(req,res){
-	
-	console.log("Hello...");
 	
 	var customer_id = req.param('customer_id');
 	var email = req.param('email');
@@ -161,6 +159,27 @@ function signupCustomer(req,res){
 }
 
 
+exports.getcustomerdetails = function(req,res){
+	
+    var msg_payload = {"customer_id": req.session.customer_id, "type": "getcustomerdetails"};
+        				
+    
+    mq_client.make_request('customer_queue', msg_payload, function(err,results) {
+    	        
+    	if (err) {
+    		
+            console.log("could get customer details " + err);
+            res.send(err);
+        } 
+        else {
+        	
+        	console.log("customer records fetched " + JSON.stringify(results));
+        	res.end(JSON.stringify(results)); 
+        }        
+    });
+}
+
+
 
 exports.customer_deleteself = function(req,res){
 		
@@ -183,25 +202,27 @@ exports.customer_deleteself = function(req,res){
     });
 }
 
+
+
 //#01 - Start -- Prajwal Kondawar
 
 function checkCustomerAvailability (req,res){
 	
 	var msg_payload = {
-    	"customer_id": req.session.customer_id,
-        "type": "checkCustomerAvailability"
-    };
+  	"customer_id": req.session.customer_id,
+      "type": "checkCustomerAvailability"
+  };
 
-    mq_client.make_request('customer_queue', msg_payload, function(err,results) {
-        console.log(results);
-        if (err) {
-            console.log(err);
-            res.send(err);
-        } else {
-            console.log("about results" + results);
-            res.end(JSON.stringify(results));
-        }
-    });
+  mq_client.make_request('customer_queue', msg_payload, function(err,results) {
+      console.log(results);
+      if (err) {
+          console.log(err);
+          res.send(err);
+      } else {
+          console.log("about results" + results);
+          res.end(JSON.stringify(results));
+      }
+  });
 }
 
 function getUserDetailsByName (req,res){
@@ -210,24 +231,27 @@ function getUserDetailsByName (req,res){
 	var search_type = req.param('search_type');
 	
 	var msg_payload = {
-    	"user_name": user_name,
-    	"search_type": search_type,
-        "type": "getUserDetailsByName"
-    };
+  	"user_name": user_name,
+  	"search_type": search_type,
+      "type": "getUserDetailsByName"
+  };
 
-    mq_client.make_request('customer_queue', msg_payload, function(err,results) {
-        console.log(results);
-        if (err) {
-            console.log(err);
-            res.send(err);
-        } else {
-            console.log("about results" + results);
-            res.end(JSON.stringify(results));
-        }
-    });
+  mq_client.make_request('customer_queue', msg_payload, function(err,results) {
+      console.log(results);
+      if (err) {
+          console.log(err);
+          res.send(err);
+      } else {
+          console.log("about results" + results);
+          res.end(JSON.stringify(results));
+      }
+  });
 }
 
-// #01 - end -- Prajwal Kondawar
+//#01 - end -- Prajwal Kondawar
+
+
+
 
 
 exports.login=login;

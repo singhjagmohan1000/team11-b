@@ -284,26 +284,49 @@ $scope.endRide = function () {
 }
 
 	
-    $http({method: 'GET', url: '/getdriverdetails'}).then(function successCallback(response) {
-    		    
-    		alert("received driver details : " + JSON.stringify(response));
-    			    	
-    }, function errorCallback(response) {});
-    
-    
-    
 
-    $scope.customer_deleteself = function(){
-    	
-    	alert("deleting customer self");
-    	$http({method: 'GET', url: '/customer_deleteself'}).then(function successCallback(response) {
+
+$scope.customer = {};
+
+$http({method: 'GET', url: '/getcustomerdetails'}).then(function successCallback(response) {
 		    
-    		alert("customer self deleted..");    
-    		window.location.assign("/customerhome");
-    			    	
-    	}, function errorCallback(response) {});           	
-    	
-    }
+		alert("received customers details : " + JSON.stringify(response));
+		$scope.customer = response.data[0];
+			    	
+}, function errorCallback(response) {});
+
+
+
+
+$scope.customer_deleteself = function(){
+	
+	alert("deleting customer self");
+	$http({method: 'GET', url: '/customer_deleteself'}).then(function successCallback(response) {
+	    
+		alert("customer self deleted..");    
+		window.location.assign("/customerhome");
+			    	
+	}, function errorCallback(response) {});           	
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     // Added by Prajwal Kondawar
     $scope.deleteRideBill = function(){

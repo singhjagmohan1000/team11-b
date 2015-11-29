@@ -1,6 +1,6 @@
 var mysql=require('./mysql');
-//var mongo=require('./mongo/createCustomer');
-//var Customer = mongo.Customer;
+var mongo=require('./mongo/createCustomer');
+var Customer = mongo.Customer;
 
 
 
@@ -13,19 +13,20 @@ function handleRequest(msg,callback){
 		case "loginCustomer":
 			loginCustomer(msg,callback);
 			break;
+		case "getcustomerdetails":
+			getcustomerdetails(msg,callback);
+			break;
 		case "customer_deleteself":
 			customer_deleteself(msg,callback);
 			break;
-			
 		case "checkCustomerAvailability":
 			checkCustomerAvailability(msg,callback);
-			break;	
-			
+			break;
 		case "getUserDetailsByName":
 			getUserDetailsByName(msg,callback);
-			break;	
+			break;		
 	}
-	
+	return;
 }     
 
 
@@ -78,65 +79,93 @@ function signupCustomer(msg, callback){
     
     
     mysql.fetchData(function(err,result){
-    
+    	
+        
     	if(err){ 
     		
     		response =({status:500,message: "Customer! Registeration failed" });
+    		console.log("SYSTEM ERROR in customer registration");
     		callback(null,response);
     		
     	}
-    	else{
+    	else{											//checking if duplicate customer id exists
     		
-    		//console.log("IN FETCHDATA TO CHECK DUPLICATE IN ELSE");
+    		console.log("CHECKING DUPLICACY FOR CUSTOMER EMAIL");
+    		
+    		
     		if(result.length > 0){
     			
     			response =({status:300, message: "Customer with this ID already exists" });
-    			console.log("IN FETCHDATA TO CHECK DUPLICATE RECORD EXISTS");
+    			console.log("CUSTOMER WITH DUPLICATE ID ALREADY EXISTS");
     			callback(null,response);			
     		}
-    		else{
+    		else{										//checking for duplicate email ID
     			
-    			//console.log("IN FETCHDATA NO DUPLICATE RECORD");
     			
     			mysql.fetchData(function(err,result){
     				
-    				//console.log("IN SECOND FETCHDATA TO INSERTING CUSTOMER");
-    				if (err) {
+    				if(err){ 
     					
-    	                response =({status:500,message: "Customer! Registeration failed" });
-    	                //console.log("IN FETCHDATA TO INSERTION FAILED");
-    	                callback(null,response);
-    	            }
-    	            else {/*var createMongoCustomer = new Customer({
-    	    			customer_id: customer_id,
-    	    			c_email: email,
-    	    			c_first_name: firstname,
-    	    			c_last_name: lastname
-    	            });
+    					console.log("SYSTEM ERROR in CUSTOMER REGISTRATION");
+    					callback(null,err);
+    				}
+    				else{
+    					
+    					console.log("Checking result lenght for customer length");
+    					if(result.length > 0){
+    						
+    						response =({status:300, message: "Customer with this EMAIL already exists" });
+    		    			console.log("CUSTOMER DUPLICATE EMAIL EXISTS");
+    		    			callback(null,response);	
+    					}
+    					else{
+    						
+    						mysql.fetchData(function(err,result){
+    		    				
+    		    				console.log("IN SECOND FETCHDATA TO INSERTING CUSTOMER");
+    		    				if (err) {
+    		    					
+    		    	                response =({status:500,message: "Customer! Registeration failed" });
+    		    	                console.log("IN FETCHDATA TO INSERTION FAILED");
+    		    	                callback(null,response);
+    		    	            }
+    		    	            else {
+    		    	            	
+    		    	               response = ({status:200,message: "CUSTOMER! Registeration Succesful" });
+    		    	               console.log("CUSTOMER INSERTED TO MYSQL");
+    		    	               //callback(null, response);
+    		    	               
+    		    	               
+    		    	               
+    		    	               console.log("going in mongo save");
+    		    	               var createMongoCustomer = new Customer({
+    		    	            	   
+    		       	    				customer_id: customer_id,
+    		       	    				c_email: email,
+    		       	    				c_first_name: firstname,
+    		       	    				c_last_name: lastname
+    		       	            	});
 
-    	    		createMongoCustomer.save(function(err) {
+    		       	    			createMongoCustomer.save(function(err) {
 
-    	                if (err) {
-    	                   throw err;
-
-    	                }
-    	                else {
-    	                   response = ({status:200, message: "Customer! Registeration Succesful" });
-    	                   callback(null, response);
-    	                }
-    	                
-    	                
-    	             });*/
-    	            	
-    	            response = ({status:200, message: "Customer! Registeration Succesful" });
- 	                callback(null, response);
-    	            	
-    	            }     	
-    			},sqlQuery);
+    		       	    				if (err) {
+    		       	    					throw err;
+    		       	    				}
+    		       	    				else {
+    		       	    					
+    		       	    					console.log("saved in mongo");
+    		       	    					response = ({status:200, message: "Customer! Registeration Succesful" });
+    		       	    					callback(null, response);
+    		       	    				}
+    		       	    			});
+    		    	            }     	
+    		    			},sqlQuery);
+    					}
+    				}
+    			}, "select * from customer_info where c_email = '" + email + "'");
     		}
     	}
-    	}, "select * from customer_info where customer_id = '" + customer_id + "'");
-    
+    }, "select * from customer_info where customer_id = '" + customer_id + "'");    
 }
 
 
@@ -186,6 +215,32 @@ function loginCustomer(msg,callback){
 
 
 
+function getcustomerdetails(msg,callback){
+	
+	var customer_id = msg.customer_id;
+	
+	var response;
+	
+	var sqlQuery = "select * from customer_info where customer_id = '" + customer_id + "'";
+	
+	mysql.fetchData(function(err,result){
+		
+			if(err){ 
+				
+				console.log("Could not retrieve customer details");
+				callback(null,err);
+			}
+			else{
+				
+				response = JSON.stringify(result);
+				console.log("customer details retrieved : " + response);
+				callback(null,response);				
+			}
+	 },sqlQuery);
+}	
+
+
+
 function customer_deleteself(msg,callback){
 	
 	var customer_id = msg.customer_id;
@@ -209,6 +264,8 @@ function customer_deleteself(msg,callback){
 			}
 	 },sqlQuery);
 }	
+
+
 
 
 //#01 - Start -- Prajwal Kondawar
@@ -298,5 +355,30 @@ function getUserDetailsByName(msg, callback){
 
 // #01 - End -- Prajwal Kondawar
 
+
+
+
+
+
 exports.handleRequest=handleRequest;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

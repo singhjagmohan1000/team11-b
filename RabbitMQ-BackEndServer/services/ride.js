@@ -24,6 +24,52 @@ var mysql=require('./mysql');
 // Initial - Start
 
 
+function handleRequest(msg,callback){
+	
+	switch(msg.type)
+	{
+		case "createRide":
+			console.log("Switch - createRide");
+			createRide(msg,callback);
+			break;
+			
+		case "endRide":
+			console.log("Switch - endRide");
+			endRide(msg,callback);
+			break;
+		
+		case "deleteRideBill":
+			console.log("Switch - deleteRideBill");
+			deleteRideBill(msg,callback);
+			break;
+			
+		case "customerRideHistory":
+			console.log("Switch - customerRideHistory");
+			customerRideHistory(msg,callback);
+			break;
+			
+		case "driverRideHistory":
+			console.log("Switch - driverRideHistory");
+			driverRideHistory(msg,callback);
+			break;	
+		
+		case "rideHistory":
+			console.log("Switch - rideHistory");
+			rideHistory(msg,callback);
+			break;	
+			
+		case "searchBillByAttributes":
+			console.log("Switch - searchBillByAttributes");
+			searchBillByAttributes(msg,callback);
+			break;
+			
+				
+	}
+	return;
+}     
+
+
+
 // This API is hit when customer clicks on "Start Ride" button
 
 function createRide(msg, callback){
@@ -463,49 +509,7 @@ function getRideBill()
 }
 
 
-function handleRequest(msg,callback){
-	
-	switch(msg.type)
-	{
-		case "createRide":
-			console.log("Switch - createRide");
-			createRide(msg,callback);
-			break;
-			
-		case "endRide":
-			console.log("Switch - endRide");
-			endRide(msg,callback);
-			break;
-		
-		case "deleteRideBill":
-			console.log("Switch - deleteRideBill");
-			deleteRideBill(msg,callback);
-			break;
-			
-		case "customerRideHistory":
-			console.log("Switch - customerRideHistory");
-			customerRideHistory(msg,callback);
-			break;
-			
-		case "driverRideHistory":
-			console.log("Switch - driverRideHistory");
-			driverRideHistory(msg,callback);
-			break;	
-		
-		case "rideHistory":
-			console.log("Switch - rideHistory");
-			rideHistory(msg,callback);
-			break;	
-			
-		case "searchBillByAttributes":
-			console.log("Switch - searchBillByAttributes");
-			searchBillByAttributes(msg,callback);
-			break;
-			
-				
-	}
-	return;
-}     
+
 
 //Initial - End
 

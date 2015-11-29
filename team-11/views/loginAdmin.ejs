@@ -9,8 +9,9 @@
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </head>
 <style>
-  .has-error .form-control {
-border:1px solid #ed145b;
+  
+.has-error .form-control {
+border:1px solid #f00;
 background: #ffe5e5;
 } 
 
@@ -18,11 +19,11 @@ background: #ffe5e5;
 
 .has-error .alert
  {
-color:#ed145b;
+color:red;
 } 
 .red
 {
-color:#ed145b;
+color:red;
 }
 
 
@@ -44,7 +45,7 @@ color:#ed145b;
 
 
 	<div data-ng-app="loginAdminApp" data-ng-controller="loginAdminController">
-          <form   class="form-vertical"  name="loginAdmin" novalidate data-ng-submit="loginAdmin.$valid && loginadmin()">
+          <form   class="form-vertical"  name="loginAdmin" novalidate>
 
             		<h1 style="color:#fff; text-align:center; font-size:40px;">U B E R </h1><hr>
 		
@@ -65,7 +66,7 @@ color:#ed145b;
                 <div class="alert alert-danger"  data-ng-show="(loginAdmin.submitted||loginAdmin.password.$touched) && loginAdmin.password.$error.required"><span class="glyphicon glyphicon-remove red" aria-hidden="true"></span>Password required.</div>
               </div>
 		<div class="form-group">
-                   <button type="submit" class="btn btn-info" style = "padding : 16px 124px; font-size:14px;" data-ng-click="loginAdmin.submitted=true ">LOG IN</button>
+                   <button type="submit" class="btn btn-info" style = "padding : 16px 154px; font-size:14px;" data-ng-click="loginadmin()">LOG IN</button>
            </div>
 	</form>
 </div>
@@ -81,13 +82,18 @@ color:#ed145b;
   
      
     $scope.loginadmin=function(){
-      $http({
+      if($scope.loginAdmin.$invalid){
+        $scope.loginAdmin.submitted=true;
+      }
+      
+      else{
+        $http({
             method: 'POST',
             url: '/admin',
             data: $scope.admin
           }).
             then(function(response) { 
-             
+              alert("Hello admin");
               window.location.assign('/admin');
                 
       },function(response){
@@ -101,7 +107,7 @@ color:#ed145b;
                      
              }
       }); 
-      
+      } 
     }
   });
 </script>

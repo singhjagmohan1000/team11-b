@@ -1,7 +1,53 @@
 var mysql = require('./mysql');
-//var mongo = require('./mongo/createDriver');
-//var Driver = mongo.Driver;
+var mongo = require('./mongo/createDriver');
+var fs = require('fs');
+var path = require('path');
+var Driver = mongo.Driver;
 
+
+function handleRequest(msg,callback){
+	
+	switch(msg.type)
+	{
+		case "loginAdmin":
+			loginAdmin(msg,callback);
+			break;			
+		case "getpendingdrivers":
+			getpendingdrivers(msg,callback);
+			break;
+		case "getapproveddrivers":
+			getapproveddrivers(msg,callback);
+			break;
+		case "approvedriver":
+			approvedriver(msg,callback);
+			break;
+		case "admin_getdriverprofile":
+			admin_getdriverprofile(msg,callback);
+			break;
+		case "deletedriver":
+			deletedriver(msg,callback);
+			break;
+		case "getpendingcustomers":
+			getpendingcustomers(msg,callback);
+			break;
+		case "getapprovedcustomers":
+			getapprovedcustomers(msg,callback);
+			break;
+		case "approvecustomer":
+			approvecustomer(msg,callback);
+			break;
+		case "admin_getcustomerprofile":
+			admin_getcustomerprofile(msg,callback);
+			break;
+		case "admin_searchdriver":
+			admin_searchdriver(msg,callback);
+			break;	
+		case "deletecustomer":
+			deletecustomer(msg,callback);
+			break;
+	}
+	return;
+}
 
 
 function loginAdmin(msg,callback){
@@ -143,9 +189,33 @@ function approvedriver(msg,callback){
      
 
 
+//function admin_getdriverprofile(msg,callback){
+//	
+//	var response;
+//	
+//	var sqlQuery = "select * from driver_info where driver_id = '" + msg.driver_id + "'";
+//	
+//	mysql.fetchData(function(err,result){
+//		
+//			if(err){ 
+//				
+//				console.log("Could not retrieve driver profile");
+//				callback(null,err);
+//			}
+//			else{
+//				
+//				response = JSON.stringify(result);
+//				console.log("DRIVER profile retrieved  : " + response);
+//				callback(null,response);				
+//			}
+//	 },sqlQuery);
+//}
+
+
+
 function admin_getdriverprofile(msg,callback){
 	
-	var response;
+	var response = [];
 	
 	var sqlQuery = "select * from driver_info where driver_id = '" + msg.driver_id + "'";
 	
@@ -158,12 +228,40 @@ function admin_getdriverprofile(msg,callback){
 			}
 			else{
 				
-				response = JSON.stringify(result);
+				response[0] = result;
 				console.log("DRIVER profile retrieved  : " + response);
-				callback(null,response);				
+				//callback(null,response);
+				
+				
+				Driver.find({driver_id: msg.driver_id}, 'driver_id d_image', function(err, result) {
+	   				
+   					console.log("FROM MONGOOSE : " + JSON.stringify(result));
+   					//console.log("image path should be : " + path(__dirname  + "./" + result[0].d_image));
+   					//console.log(__dirname);
+   					
+   					//console.log("testing : " + path.resolve(__dirname,'..','media',result[0].d_image));
+   					//console.log();
+   					//callback(null,response);
+   					if (err) {
+   					
+   						console.log("in mongo save function IN IFFFF ERROR");
+   						//response =({status:500,message: "image retrieval failed" });
+   						callback(err, null);
+   					}
+   					else {
+   				
+   						console.log("In Mongo save function IN ELSE SUCCESSFULL RETRIEVAL of image");
+   						//response[1] = {"d_image": path.resolve(__dirname,'..','media',result[0].d_image)};
+   						response[1] = {"d_image": result[0].d_image};
+   						console.log("before " + JSON.stringify(response[1]));
+   						callback(null, response);
+   					}	            			               
+   				});
 			}
 	 },sqlQuery);
 }
+
+
 
 
 
@@ -324,49 +422,17 @@ function admin_searchdriver(msg,callback){
 }
 
 
-function handleRequest(msg,callback){
-	
-	switch(msg.type)
-	{
-		case "loginAdmin":
-			loginAdmin(msg,callback);
-			break;			
-		case "getpendingdrivers":
-			getpendingdrivers(msg,callback);
-			break;
-		case "getapproveddrivers":
-			getapproveddrivers(msg,callback);
-			break;
-		case "approvedriver":
-			approvedriver(msg,callback);
-			break;
-		case "admin_getdriverprofile":
-			admin_getdriverprofile(msg,callback);
-			break;
-		case "deletedriver":
-			deletedriver(msg,callback);
-			break;
-		case "getpendingcustomers":
-			getpendingcustomers(msg,callback);
-			break;
-		case "getapprovedcustomers":
-			getapprovedcustomers(msg,callback);
-			break;
-		case "approvecustomer":
-			approvecustomer(msg,callback);
-			break;
-		case "admin_getcustomerprofile":
-			admin_getcustomerprofile(msg,callback);
-			break;
-		case "admin_searchdriver":
-			admin_searchdriver(msg,callback);
-			break;	
-		case "deletecustomer":
-			deletecustomer(msg,callback);
-			break;
-	}
-	return;
-}
+
+
+
+
+
+
+
+
+
+
+
 exports.handleRequest=handleRequest;
 
 

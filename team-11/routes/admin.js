@@ -135,6 +135,8 @@ exports.admin_todriverprofile = function(req,res){
 }
 
 
+
+
 exports.admin_getdriverprofile = function(req,res){
 	
 	console.log("in admin_getdriverprofile....");
@@ -151,11 +153,37 @@ exports.admin_getdriverprofile = function(req,res){
         else {
         	
         	console.log("going to driver profile");
+        	console.log("driver profile from server : " + JSON.stringify(results));
         	res.end(JSON.stringify(results));
         }
     });
 }
 
+
+
+
+//
+//exports.admin_getdriverprofile = function(req,res){
+//	
+//	console.log("in admin_getdriverprofile....");
+//	
+//	var msg_payload = {"driver_id": req.session.driver_id_profile, "type": "admin_getdriverprofile"};
+//    
+//    mq_client.make_request('admin_queue', msg_payload, function(err,results) {
+//        
+//        if (err) {
+//        	
+//            console.log(err);
+//            res.send(err);
+//        } 
+//        else {
+//        	
+//        	console.log("going to driver profile");
+//        	console.log("driver profile from server : " + JSON.stringify(results));
+//        	res.end(JSON.stringify(results));
+//        }
+//    });
+//}
 
 
 

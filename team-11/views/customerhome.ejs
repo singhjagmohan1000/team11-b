@@ -14,6 +14,7 @@
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
       <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+      
       <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
@@ -170,9 +171,19 @@
 
 		<div class="row">
 
-			<h2>HELLO DRIVER</h2>
+			<h2>HELLO CUSTOMER</h2>
 			
 			<button ng-click = "customer_deleteself()">delete my account</button>
+			
+			<div>
+			
+				{{customer.customer_id}} {{customer.c_first_name}} {{customer.c_last_name}} {{customer.c_car_number}}			
+		
+			</div>
+		
+			<form method = "GET" action = "/signout">
+				<button type = "submit">Sign Out</button>		
+			</form>	
 			
 			<!-- Prajwal Kondawar START -->
 			<button ng-click = "deleteRideBill()">delete ride</button>

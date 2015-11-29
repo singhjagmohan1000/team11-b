@@ -7,6 +7,8 @@ var driverRidesList = new mongoose.Schema({
 	rating: {type:String},
 	reviews: {type:String}
 });
+
+
 var driver = new mongoose.Schema({
 	driver_id: {type: String, required:true, unique: true},
 	d_email: {type: String, required: true, unique: true},
@@ -15,7 +17,9 @@ var driver = new mongoose.Schema({
 	d_image:{type:String},
 	d_video:{type:String},
 	d_rides:[driverRidesList]});
- Driver = mongoose.model('driver_info', driver);
+
+
+Driver = mongoose.model('driver_info', driver);
 
 
 

@@ -1,7 +1,7 @@
 
 var mq_client = require('../rpc/client');
 var ejs = require('ejs');
-
+var fs = require('fs');
 
 function signup(req,res){
 	
@@ -67,15 +67,15 @@ function signupDriver(req,res){
 	var driver_id= req.param('driver_id');
 	var email = req.param('d_email');
     var password = req.param('d_password');
-    var firstName = req.param('d_first_name');
-    var lastName = req.param('d_last_name');
-    var address = req.param('d_address');
-    var city = req.param('d_city');
-    var state = req.param('d_state');
-    var zipCode = req.param('d_zipcode');
-    var phoneNumber = req.param('d_phonenumber');
-    var d_car_number = req.param('d_car_number');
-    var d_car_name = req.param('d_car_name');
+    var firstName = req.param('first_name');
+    var lastName = req.param('last_name');
+    var address = req.param('address');
+    var city = req.param('city');
+    var state = req.param('state');
+    var zipCode = req.param('zipCode');
+    var phoneNumber = req.param('mobile');
+    var d_car_number = req.param('car_number');
+    var d_car_name = req.param('car_name');
     var response;
     
     var driver_id_validate = /^[0-9]{3}\-[0-9]{2}\-[0-9]{4}$/;
@@ -91,35 +91,35 @@ function signupDriver(req,res){
     	return;
     }
     
-    if(!car_number_validate.test(d_car_number)){
-    	
-    	console.log("In IF invalid registration number");
-    	res.end("In IF invalid registration number");
-    	return;     	
-    }
+//    if(!car_number_validate.test(d_car_number)){
+//    	
+//    	console.log("In IF invalid registration number");
+//    	res.end("In IF invalid registration number");
+//    	return;     	
+//    }
     
-    if(!email_validate.test(email)){
-    	
-    	console.log("In IF invalid EMAIL");
-    	res.end("In IF invalid EMAIL");
-    	return;    	
-    }
+//    if(!email_validate.test(email)){
+//    	
+//    	console.log("In IF invalid EMAIL");
+//    	res.end("In IF invalid EMAIL");
+//    	return;    	
+//    }
+//    
+//    if(!zipCode_validate.test(zipCode)){
+//    	
+//    	console.log("In IF invalid ZIPCODE");
+//    	res.end("In IF invalid ZIPCODE");
+//    	return;    	
+//    }
+//    
+//    if(phoneNumber.toString().length != 10){
+//    	
+//    	console.log("In IF invalid PHONE");
+//    	res.end("In IF invalid PHONE");
+//    	return;     	
+//    }
     
-    if(!zipCode_validate.test(zipCode)){
-    	
-    	console.log("In IF invalid ZIPCODE");
-    	res.end("In IF invalid ZIPCODE");
-    	return;    	
-    }
-    
-    if(phoneNumber.toString().length != 10){
-    	
-    	console.log("In IF invalid PHONE");
-    	res.end("In IF invalid PHONE");
-    	return;     	
-    }
-    
-    
+    console.log("request object :" + req);
     
     var msg_payload = {
     		
@@ -137,6 +137,8 @@ function signupDriver(req,res){
         "d_car_name" : d_car_name,
         "type":"signupDriver"      
     };
+    
+    console.log("sending msg payload for driver signup : " + JSON.stringify(msg_payload));
 
     mq_client.make_request('driver_queue', msg_payload, function(err,results) {
     	
@@ -157,7 +159,6 @@ function signupDriver(req,res){
         		
         		res.end(results.message);
         	}
-            
         }
     });
 }
@@ -183,6 +184,133 @@ exports.getdriverdetails = function(req,res){
 }
 
 
+
+exports.updatedriver = function(req,res){
+	
+	var email = req.param('d_email');
+	var password = req.param('d_password');
+    var firstName = req.param('d_first_name');
+    var lastName = req.param('d_last_name');
+    var address = req.param('d_address');
+    var city = req.param('d_city');
+    var state = req.param('d_state');
+    var zipCode = req.param('d_zipcode');
+    var phoneNumber = req.param('d_phonenumber');
+    var d_car_number = req.param('d_car_number');
+    var d_car_name = req.param('d_car_name');
+	
+	
+	 var msg_payload = {
+	    		
+		    	"driver_id":req.session.driver_id,
+		    	"email": email,
+		        "password" : password,
+		        "firstName" : firstName,
+		        "lastName" : lastName,
+		        "address" : address,
+		        "city" : city,
+		        "state" : state,
+		        "zipCode" : zipCode,
+		        "phoneNumber" : phoneNumber,
+		        "d_car_number" : d_car_number,
+		        "d_car_name" : d_car_name,
+		        "type":"updatedriver"      
+		    };
+	
+	 console.log("data recieved for update : " + msg_payload);
+	
+    
+    mq_client.make_request('driver_queue', msg_payload, function(err,results) {
+        
+        if (err) {
+            console.log(err);
+            res.send(err);
+        } 
+        else {
+        	
+            console.log("Driver updated" + JSON.stringify(results));  
+            res.end();
+        }
+    });
+}
+
+exports.imageupload = function(req,res){
+	
+	console.log("CLIENT : in imageupload function");
+	
+	
+	if(req.files.pt_file.size != 0){
+		
+	    var tmp_path = req.files.pt_file.path;
+	    
+	    var target_path = "./public/media/" + req.session.driver_id + ".jpg";
+	    var profile_pic = req.session.driver_id;
+	    
+	    fs.rename(tmp_path, target_path, function(err) {
+	    	
+	        if (err) throw err;
+	        
+	        fs.unlink(tmp_path, function(){
+	        	
+	            if (err) {
+	            	
+	                throw err;
+	            }
+	            else{
+	                    profile_pic = req.files.pt_file.name;
+	            };
+	        });
+	     });
+	}
+	else{
+	
+		profile_pic = "empty.jpg";
+	}
+	
+  
+	var msg_payload = {"driver_id": req.session.driver_id, "d_image" : req.session.driver_id, "type": "imageupload"};
+    
+    mq_client.make_request('driver_queue', msg_payload, function(err,results) {
+        
+        if (err) {
+            console.log(err);
+            res.send(err);
+        } 
+        else {
+        	
+            console.log("image uploaded" + JSON.stringify(results));  
+            res.end();
+            
+        }
+    });
+};
+
+
+
+//exports.imageupload = function(req,res){
+//	
+//	console.log("CLIENT : in imageupload function");
+//	
+//	var msg_payload = {"driver_id": req.session.driver_id, "imageobject" : req.files.pt_file, "type": "imageupload"};
+//    
+//    mq_client.make_request('driver_queue', msg_payload, function(err,results) {
+//        
+//        if (err) {
+//            console.log(err);
+//            res.send(err);
+//        } 
+//        else {
+//        	
+//            console.log("image uploaded" + JSON.stringify(results));  
+//            res.end();
+//            
+//        }
+//    });
+//};
+
+
+
+
 exports.driver_deleteself = function(req,res){
 	
 	
@@ -202,6 +330,7 @@ exports.driver_deleteself = function(req,res){
         }
     });
 }
+
 
 
 

@@ -1,7 +1,7 @@
 
 var express = require('express');
 var routes = require('./routes');
-var user = require('./routes/user');
+
 var admin = require('./routes/admin');
 var customer = require('./routes/customer');
 var driver = require('./routes/driver');
@@ -10,10 +10,11 @@ var http = require('http');
 var path = require('path');
 
 
-var expressSession = require("express-session");
-/*var mongoStore = require("connect-mongo")(expressSession);
+//var expressSession = require("express-session");
+//var mongoStore = require("connect-mongo")(expressSession);
+
 var mongoose = require('mongoose');
-var connection = mongoose.connect("mongodb://localhost:27017/uber_db");*/
+var connection = mongoose.connect("mongodb://localhost:27017/uber_db");
 
 var app = express();
 
@@ -77,6 +78,9 @@ app.get('/signupCustomer',customer.signup);
 app.post('/signupCustomer',customer.signupCustomer);
 app.get('/customer_deleteself', customer.customer_deleteself);
 app.get('/customerhome', customer.login);
+app.get('/getcustomerdetails', customer.getcustomerdetails);
+app.post('/checkCustomerAvailability', customer.checkCustomerAvailability);
+app.post('/getUserDetailsByName', customer.getUserDetailsByName);
 
 
 //drivrModule
@@ -87,7 +91,9 @@ app.post('/signupDriver',driver.signupDriver);
 app.get('/driver_deleteself', driver.driver_deleteself);
 app.get('/driverhome', driver.login);
 app.get('/getdriverdetails', driver.getdriverdetails);
+app.post('/updatedriver', driver.updatedriver);
 
+app.post('/imageupload', driver.imageupload);
 
 // RIDE and BILLLING API - Prajwal Kondawar
 
@@ -99,11 +105,9 @@ app.post('/customerRideHistory', ride.customerRideHistory);
 app.post('/driverRideHistory', ride.driverRideHistory);
 app.post('/rideHistory', ride.rideHistory);
 
-app.post('/checkCustomerAvailability', customer.checkCustomerAvailability);
-app.post('/getUserDetailsByName', customer.getUserDetailsByName);
 
 //Logout API
-app.post('/signout', function(req,res){
+app.get('/signout', function(req,res){
 	
 	req.session.destroy();	
 	console.log("Session destroyed");

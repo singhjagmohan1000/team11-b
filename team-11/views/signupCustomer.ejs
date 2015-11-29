@@ -263,7 +263,7 @@ color:red;
                                               <option value="2024" label="2024">2024</option>
                                               <option value="2025" label="2025">2025</option>
                                               <option value="2026" label="2026">2026</option>
-                                              <option value="2027" label="2027">2027</option>
+                                              <option value="2027" label="2017">2027</option>
                                       </select>
                                        <div class="alert alert-danger"  data-ng-show="(signCust.submitted||signCust.year.$touched) && signCust.year.$error.required">
                   <span class="glyphicon glyphicon-remove red" aria-hidden="true"></span>
@@ -314,7 +314,7 @@ color:red;
             data: $scope.customer
           }).
             then(function(response) { 
-              alert("Hello");
+              alert("Hello customer");
                 
       },function(response){
        for (var fieldName in response.data) {
