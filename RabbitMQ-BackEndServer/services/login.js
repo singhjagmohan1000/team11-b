@@ -1,4 +1,4 @@
-var mongo = require("./mongo");
+/*var mongo = require("./mongo");
 	var mongoURL = "mongodb://localhost:27017/facebook";
 function handle_request(msg, callback){
 	
@@ -81,4 +81,4 @@ function signup(msg,callback){
 }
 exports.signup=signup;
 exports.fetch_data=fetch_data;
-exports.handle_request = handle_request;
+exports.handle_request = handle_request;*/

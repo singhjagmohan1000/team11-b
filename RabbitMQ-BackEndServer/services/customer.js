@@ -1,6 +1,6 @@
 var mysql=require('./mysql');
-var mongo=require('./mongo/createCustomer');
-var Customer = mongo.Customer;
+//var mongo=require('./mongo/createCustomer');
+//var Customer = mongo.Customer;
 
 
 
@@ -16,6 +16,14 @@ function handleRequest(msg,callback){
 		case "customer_deleteself":
 			customer_deleteself(msg,callback);
 			break;
+			
+		case "checkCustomerAvailability":
+			checkCustomerAvailability(msg,callback);
+			break;	
+			
+		case "getUserDetailsByName":
+			getUserDetailsByName(msg,callback);
+			break;	
 	}
 	
 }     
@@ -99,7 +107,7 @@ function signupCustomer(msg, callback){
     	                //console.log("IN FETCHDATA TO INSERTION FAILED");
     	                callback(null,response);
     	            }
-    	            else {var createMongoCustomer = new Customer({
+    	            else {/*var createMongoCustomer = new Customer({
     	    			customer_id: customer_id,
     	    			c_email: email,
     	    			c_first_name: firstname,
@@ -118,7 +126,11 @@ function signupCustomer(msg, callback){
     	                }
     	                
     	                
-    	             });
+    	             });*/
+    	            	
+    	            response = ({status:200, message: "Customer! Registeration Succesful" });
+ 	                callback(null, response);
+    	            	
     	            }     	
     			},sqlQuery);
     		}
@@ -199,9 +211,92 @@ function customer_deleteself(msg,callback){
 }	
 
 
+//#01 - Start -- Prajwal Kondawar
+
+function checkCustomerAvailability(msg, callback){
+
+	var customer_id = msg.customer_id;
+    var availability_flag;
+    
+	var response;
+   
+    var sqlQuery="SELECT c_available FROM customer_info WHERE customer_id = '" + customer_id + "'";
+    console.log("From checkCustomerAvailability API - Select Customer Availability query: " + sqlQuery);
+    
+    mysql.fetchData(function(err,result){
+		if(err){
+			
+			response =({status:500,message: "SELECT c_available failed" });
+			callback(null,response);
+			
+		}
+		else{
+					
+			console.log("Selection of c_available succeeded");
+			
+			if (result[0].c_available === "Y") {
+				availability_flag = "Y";
+			}
+			else{
+				availability_flag = "N";
+			}
+			
+			response =({status:200, available_flag: availability_flag, message: "Customer Availability flag" });
+			callback(null, response);
+			       
+		}
+		
+	},sqlQuery);
+    
+}
 
 
+//This (GENERIC) API is useful when you want to perform any activity by Name.
+//Since, a particular name can occur multiple times, We need to get all the occurences.
+//then clicking on one occurence will do the required operation with that user's unique ID.
 
+function getUserDetailsByName(msg, callback){
+
+	var user_name = msg.user_name;
+	var search_type = msg.search_type;
+	
+	var sqlQuery;
+	var response;
+
+	if (search_type === 'C'){ // For Customer
+		
+		sqlQuery= "SELECT customer_id, c_first_name, c_last_name FROM customer_info WHERE c_first_name = '" + user_name + "'"; 
+		
+	} else if (search_type === 'D'){ // For Driver
+		
+		sqlQuery= "SELECT driver_id, d_first_name, d_last_name FROM driver_info WHERE d_first_name = '" + user_name + "'";
+		
+	} 
+	
+ 
+	console.log("From getUserDetailsByName API - Select query: " + sqlQuery);
+ 
+	mysql.fetchData(function(err,result){
+		if(err){
+			
+			response =({status:500,message: "Selection of User Details failed" });
+			callback(null,response);
+			
+		}
+		else{
+					
+			console.log("Selection of User Details suceeded");
+			response =({status:200, result: result, message: "User Details Fetched" });
+			callback(null, response);
+			       
+		}
+		
+	},sqlQuery);
+ 
+}
+
+
+// #01 - End -- Prajwal Kondawar
 
 exports.handleRequest=handleRequest;
 
