@@ -58,6 +58,8 @@ function loginCustomer(req,res){
 
 function signupCustomer(req,res){
 	
+	console.log("Hello...");
+	
 	var customer_id = req.param('customer_id');
 	var email = req.param('email');
     var password = req.param('password');
@@ -181,10 +183,56 @@ exports.customer_deleteself = function(req,res){
     });
 }
 
+//#01 - Start -- Prajwal Kondawar
 
+function checkCustomerAvailability (req,res){
+	
+	var msg_payload = {
+    	"customer_id": req.session.customer_id,
+        "type": "checkCustomerAvailability"
+    };
+
+    mq_client.make_request('customer_queue', msg_payload, function(err,results) {
+        console.log(results);
+        if (err) {
+            console.log(err);
+            res.send(err);
+        } else {
+            console.log("about results" + results);
+            res.end(JSON.stringify(results));
+        }
+    });
+}
+
+function getUserDetailsByName (req,res){
+	
+	var user_name = req.param('user_name');
+	var search_type = req.param('search_type');
+	
+	var msg_payload = {
+    	"user_name": user_name,
+    	"search_type": search_type,
+        "type": "getUserDetailsByName"
+    };
+
+    mq_client.make_request('customer_queue', msg_payload, function(err,results) {
+        console.log(results);
+        if (err) {
+            console.log(err);
+            res.send(err);
+        } else {
+            console.log("about results" + results);
+            res.end(JSON.stringify(results));
+        }
+    });
+}
+
+// #01 - end -- Prajwal Kondawar
 
 
 exports.login=login;
 exports.loginCustomer=loginCustomer;
 exports.signupCustomer=signupCustomer;
 exports.signup=signup;
+exports.checkCustomerAvailability=checkCustomerAvailability; //#01
+exports.getUserDetailsByName=getUserDetailsByName; // #01

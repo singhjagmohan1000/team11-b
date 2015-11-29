@@ -2,11 +2,169 @@
 
 <html lang="en">
 <head>
-<title>Driver HOME</title>
 
+      <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+
+      <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+      <script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+      <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+      <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+
+<title>Driver HOME</title>
+<style>
+      html, body {
+        height: 100%;
+        /*margin: 0;*/
+        /*padding: 10%;*/
+      }
+      #map {
+        height: 80%;
+        margin-right: 400;
+
+        /*margin-bottom: 50;*/
+        /*padding: 20%;*/
+
+      }
+.controls {
+  margin-top: 10px;
+  border: 1px solid transparent;
+  border-radius: 2px 0 0 2px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  height: 32px;
+  outline: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+#pac-input {
+    position: absolute;
+    top: 2px;
+    left: 8%;
+    z-index: 5;
+  background-color: #fff;
+  font-family: Roboto;
+  font-size: 15px;
+  font-weight: 300;
+  margin-left: 12px;
+  padding: 0 11px 0 13px;
+  text-overflow: ellipsis;
+  width: 300px;
+}
+
+#pac-input:focus {
+  border-color: #4d90fe;
+}
+
+#pac-output {
+    position: absolute;
+    top: 2px;
+    left: 32%;
+    z-index: 5;
+  background-color: #fff;
+  font-family: Roboto;
+  font-size: 15px;
+  font-weight: 300;
+  margin-left: 12px;
+  padding: 0 11px 0 13px;
+  text-overflow: ellipsis;
+  width: 300px;
+}
+
+#pac-output:focus {
+  border-color: #4d90fe;
+}
+
+.pac-container {
+  font-family: Roboto;
+}
+
+#type-selector {
+  color: #fff;
+  background-color: #4d90fe;
+  padding: 5px 11px 0px 11px;
+}
+
+#type-selector label {
+  font-family: Roboto;
+  font-size: 13px;
+  font-weight: 300;
+}
+
+/*#floating-panel {
+  position: absolute;
+  top: 10px;
+  left: 25%;
+  z-index: 5;
+  background-color: #fff;
+  padding: 5px;
+  border: 1px solid #999;
+  text-align: center;
+  font-family: 'Roboto','sans-serif';
+  line-height: 30px;
+  padding-left: 10px;
+}*/
+
+#right-panel {
+  font-family: 'Roboto','sans-serif';
+  line-height: 30px;
+  padding-left: 10px;
+}
+
+#right-panel select, #right-panel input {
+  font-size: 15px;
+}
+
+#right-panel select {
+  width: 100%;
+}
+
+#right-panel i {
+  font-size: 12px;
+}
+
+      #right-panel {
+        height: 100%;
+        float: right;
+        width: 390px;
+        overflow: auto;
+      }
+
+
+      #floating-panel {
+        background: #fff;
+        padding: 5px;
+        font-size: 14px;
+        font-family: Arial;
+        border: 1px solid #ccc;
+        box-shadow: 0 2px 2px rgba(33, 33, 33, 0.4);
+        display: none;
+      }
+</style>
 </head>
 
-<body ng-app = "" ng-controller = "appController">
+<body ng-app = "UberApp" ng-controller = "RideRequestController">
+
+      <input id="pac-input"  class="controls" type="text"
+      placeholder="choose pick-up location">
+      <input id="pac-output"  class="controls" type="text"
+          placeholder="choose destination">
+    <div id="right-panel"></div>
+    <div id = "map">
+    </div>  
+    <button type="button" class="btn btn-primary active" ng-click = "startRide()">Request Ride</button>
+    <button type="button" class="btn btn-primary active" ng-click = "endRide()">End Ride</button>
+    <button type="button" class="btn btn-primary active" ng-click = "showDrivers()">Show Drivers</button>
+    <script type="text/javascript" src= "../resources/map.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgYPa3rFTfvxYkwI6EQxD12w5zKmbC4I0&signed_in=true&libraries=places&callback=initMap"
+        async defer></script>
 
 	<div class="container">
 
@@ -14,22 +172,25 @@
 
 			<h2>HELLO DRIVER</h2>
 			
-			
-		</div>
-		
-		<div>
-			
 			<button ng-click = "customer_deleteself()">delete my account</button>
-		
-		
+			
+			<!-- Prajwal Kondawar START -->
+			<button ng-click = "deleteRideBill()">delete ride</button>
+			
+			<input type="text" placeholder="Attribute Type" ng-model="attributeType">
+			<input type="text" placeholder="Attribute Value" ng-model="attributeValue">
+			<button ng-click = "searchBillByAttributes()">Search Bill</button>
+			
+			<!-- Prajwal Kondawar END -->
+			
 		</div>
 
 	</div>
 	
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>		
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
-    <script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script> -->
+ <!--    <script>
     
         function appController($scope, $http) {
         	
@@ -40,8 +201,6 @@
             }, function errorCallback(response) {});
             
             
-            
-
             $scope.customer_deleteself = function(){
             	
             	alert("deleting customer self");
@@ -55,25 +214,8 @@
             }
             
             
-            
-            
         };
-    </script>
+    </script> -->
 	
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

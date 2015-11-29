@@ -5,14 +5,15 @@ var user = require('./routes/user');
 var admin = require('./routes/admin');
 var customer = require('./routes/customer');
 var driver = require('./routes/driver');
+var ride = require('./routes/ride'); // Prajwal Kondawar
 var http = require('http');
 var path = require('path');
 
 
 var expressSession = require("express-session");
-var mongoStore = require("connect-mongo")(expressSession);
+/*var mongoStore = require("connect-mongo")(expressSession);
 var mongoose = require('mongoose');
-var connection = mongoose.connect("mongodb://localhost:27017/uber_db");
+var connection = mongoose.connect("mongodb://localhost:27017/uber_db");*/
 
 var app = express();
 
@@ -36,6 +37,7 @@ app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use("/resources", express.static(__dirname + '/resources'));
 
 if ('development' === app.get('env')) {
 	
@@ -86,6 +88,19 @@ app.get('/driver_deleteself', driver.driver_deleteself);
 app.get('/driverhome', driver.login);
 app.get('/getdriverdetails', driver.getdriverdetails);
 
+
+// RIDE and BILLLING API - Prajwal Kondawar
+
+app.post('/createRide', ride.createRide);
+app.post('/endRide', ride.endRide);
+app.post('/deleteRideBill', ride.deleteRideBill);
+app.post('/searchBillByAttributes', ride.searchBillByAttributes);
+app.post('/customerRideHistory', ride.customerRideHistory);
+app.post('/driverRideHistory', ride.driverRideHistory);
+app.post('/rideHistory', ride.rideHistory);
+
+app.post('/checkCustomerAvailability', customer.checkCustomerAvailability);
+app.post('/getUserDetailsByName', customer.getUserDetailsByName);
 
 //Logout API
 app.post('/signout', function(req,res){
