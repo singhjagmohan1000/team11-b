@@ -94,6 +94,7 @@ app.get('/getdriverdetails', driver.getdriverdetails);
 app.post('/updatedriver', driver.updatedriver);
 
 app.post('/imageupload', driver.imageupload);
+app.post('/videoupload', driver.videoupload);
 
 // RIDE and BILLLING API - Prajwal Kondawar
 

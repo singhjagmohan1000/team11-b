@@ -285,6 +285,95 @@ exports.imageupload = function(req,res){
     });
 };
 
+//* Parveen
+exports.videoupload = function(req,res){
+	
+	console.log("CLIENT : in videoupload function");
+	
+	
+	if(req.files.movie.size != 0){
+		
+	    var tmp_path = req.files.movie.path;
+	    
+	    var target_path = "./public/media/" + req.session.driver_id + ".mp4";
+	    var profile_video = req.session.driver_id;
+	    
+	    fs.rename(tmp_path, target_path, function(err) {
+	    	
+	        if (err) throw err;
+	        
+	        fs.unlink(tmp_path, function(){
+	        	
+	            if (err) {
+	            	
+	                throw err;
+	            }
+	            else{
+	                    profile_video = req.files.movie.name;
+	            };
+	        });
+	     });
+	}
+	else{
+	
+		profile_video = "empty.mp4";
+	}
+	
+  
+	var msg_payload = {"driver_id": req.session.driver_id, "d_video" : req.session.driver_id, "type": "videoupload"};
+    
+    mq_client.make_request('driver_queue', msg_payload, function(err,results) {
+        
+        if (err) {
+            console.log(err);
+            res.send(err);
+        } 
+        else {
+        	
+            console.log("video uploaded" + JSON.stringify(results));  
+            res.end();
+            
+        }
+    });
+};
+
+//var fs = require("fs"),
+//http = require("http"),
+//url = require("url"),
+//path = require("path");
+//
+//exports.getVideo = function (req, res) {
+//if (req.url !== "/movie.mp4") {
+//	res.writeHead(200, { "Content-Type": "text/html" });
+//	res.end('<video src="http://localhost:3000/movie.mp4" controls></video>');
+//	} else {
+//	var file = path.resolve(__dirname,"../public/movie.mp4");
+//	var range = req.headers.range;
+//	var positions = range.replace(/bytes=/, "").split("-");
+//	var start = parseInt(positions[0], 10);
+//
+//	fs.stat(file, function(err, stats) {
+//	  var total = stats.size;
+//	  var end = positions[1] ? parseInt(positions[1], 10) : total - 1;
+//	  var chunksize = (end - start) + 1;
+//
+//	  res.writeHead(206, {
+//	    "Content-Range": "bytes " + start + "-" + end + "/" + total,
+//	    "Accept-Ranges": "bytes",
+//	    "Content-Length": chunksize,
+//	    "Content-Type": "video/mp4"
+//	  });
+//
+//	  var stream = fs.createReadStream(file, { start: start, end: end })
+//	    .on("open", function() {
+//	      stream.pipe(res);
+//	    }).on("error", function(err) {
+//	      res.end(err);
+//	    });
+//	});
+//}
+//};
+
 
 
 //exports.imageupload = function(req,res){

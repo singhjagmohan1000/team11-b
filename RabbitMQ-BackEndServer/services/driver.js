@@ -24,6 +24,9 @@ function handleRequest(msg,callback){
 		case "imageupload":
 			imageupload(msg,callback);
 			break;
+		case "videoupload":
+			videoupload(msg,callback);
+			break;
 		case "driver_deleteself":
 			driver_deleteself(msg,callback);
 			break;
@@ -412,6 +415,37 @@ function imageupload(msg,callback){
 		   			
 		   					console.log("In Mongo save function IN ELSE image saved");
 		   					response = ({status:200,message: "image saved to mongo" });
+		   					callback(null, response);
+		   				}	            			               
+		   			});
+	                 
+	                 
+};
+
+//*Parveen
+function videoupload(msg,callback){
+	
+	
+	console.log("SERVER in videoupload function");
+	
+	var imageobject = msg.imageobject;
+	var driver_id = msg.driver_id;
+	var d_video = msg.d_video + ".mp4";
+	
+	
+		               
+		   			Driver.update({driver_id: driver_id}, {d_video: d_video} ,{upsert:true},function(err) {
+		   				
+		   				if (err) {
+		   					
+		   					console.log("in mongo save function error saving video");
+		   					response =({status:500,message: "error saving video" });
+		   					callback(null, response);
+		   				}
+		   				else {
+		   			
+		   					console.log("In Mongo save function IN ELSE video saved");
+		   					response = ({status:200,message: "video saved to mongo" });
 		   					callback(null, response);
 		   				}	            			               
 		   			});
