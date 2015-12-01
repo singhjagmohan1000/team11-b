@@ -11,10 +11,9 @@ var Polylineroute;
 var source_city;
 var destination_city;
 
-
 function initMap() {
  map = new google.maps.Map(document.getElementById('map'), {
-center: {lat: -33.8688, lng: 151.2195},
+center: {lat: 37.3382, lng: 121.8863},
 zoom: 13
 });
 
@@ -181,9 +180,19 @@ function getTimeString( date) {
     return localISOTime;
 }
 
-var app = angular.module("UberApp", [ ]);
-app.controller('RideRequestController', function($scope, $http) {
+var app = angular.module("customerHomeApp", [ ]);
+app.controller('customerHomeController', function($scope, $http) {
 
+	   $scope.profile_pic="default.jpeg";
+		$http({
+	        method: 'GET',
+	        url: '/getCustomerDetails',
+	        
+	      }). then(function(response) {
+	    	 // $scope.profile_pic=response.data.msg;
+	    	  $scope.customer=response.data[0];
+	      });
+	
 $scope.startRide = function () {
 
     pick_up_time = new Date();
@@ -283,21 +292,6 @@ $scope.endRide = function () {
     console.log("ride ended");
 }
 
-	
-
-
-$scope.customer = {};
-
-$http({method: 'GET', url: '/getcustomerdetails'}).then(function successCallback(response) {
-		    
-		alert("received customers details : " + JSON.stringify(response));
-		$scope.customer = response.data[0];
-			    	
-}, function errorCallback(response) {});
-
-
-
-
 $scope.customer_deleteself = function(){
 	
 	alert("deleting customer self");
@@ -309,23 +303,6 @@ $scope.customer_deleteself = function(){
 	}, function errorCallback(response) {});           	
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     
     // Added by Prajwal Kondawar

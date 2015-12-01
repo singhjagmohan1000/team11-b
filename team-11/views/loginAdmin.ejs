@@ -52,6 +52,7 @@ color:red;
 <div style = "font-size:16px; color:#fff;" class="form-group required" data-ng-class="{
                     'has-error': (loginAdmin.email.$touched||loginAdmin.email.$dirty|| loginAdmin.submitted) && loginAdmin.email.$invalid,
                     'has-success': loginAdmin.email.$dirty && loginAdmin.email.$valid}">
+                    <div class="alert alert-danger"  data-ng-show="serverMessage"><span class="glyphicon glyphicon-remove red" aria-hidden="true"></span>{{serverMessage}}</div>
                 <label class=" control-label" for="email">Email</label>
                 <input class="form-control" type="email" value=""  data-ng-model="admin.email" name="email" id="email" placeholder="name@example.com" data-ng-pattern="/\S+@\S+\.\S+/" required>
                 <div class="alert alert-danger" data-ng-show="(loginAdmin.submitted||loginAdmin.email.$dirty) && loginAdmin.email.$error.pattern "><span class="glyphicon glyphicon-remove red" aria-hidden="true"></span>Invalid Email Address</div>
@@ -66,7 +67,7 @@ color:red;
                 <div class="alert alert-danger"  data-ng-show="(loginAdmin.submitted||loginAdmin.password.$touched) && loginAdmin.password.$error.required"><span class="glyphicon glyphicon-remove red" aria-hidden="true"></span>Password required.</div>
               </div>
 		<div class="form-group">
-                   <button type="submit" class="btn btn-info" style = "padding : 16px 154px; font-size:14px;" data-ng-click="loginadmin()">LOG IN</button>
+                   <button type="submit" class="btn btn-lg btn-info btn-block" style=" font-size:16px;" data-ng-click="loginadmin()">LOG IN</button>
            </div>
 	</form>
 </div>
@@ -93,19 +94,11 @@ color:red;
             data: $scope.admin
           }).
             then(function(response) { 
-              alert("Hello admin");
+             
               window.location.assign('/admin');
                 
       },function(response){
-       for (var fieldName in response.data) {
-                     var message = response.data[fieldName];
-                     
-                     var serverMessage = $parse('loginAdmin.'+fieldName+'.$error.serverMessage');
-                         $scope.loginAdmin.$setValidity(fieldName, true, $scope.loginAdmin);
-                         serverMessage.assign($scope, response.data[fieldName]);
-                       
-                     
-             }
+    	  $scope.serverMessage=response.data;
       }); 
       } 
     }

@@ -10,7 +10,7 @@ exports.login = function(req,res){
 	
 	if(req.session.admin_id){
 		
-		res.render("adminhome");
+		res.render("adminDashboard");
 	}
 	else{
 		
@@ -46,7 +46,7 @@ exports.loginAdmin = function(req,res){
             }            
             else{
             	
-            	res.status(404).send("admin login error");            	         	
+            	res.status(404).send(" Invalid Usernam & Password! Please try again.");             	         	
             }
         }
     });

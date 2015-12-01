@@ -78,7 +78,7 @@ app.get('/signupCustomer',customer.signup);
 app.post('/signupCustomer',customer.signupCustomer);
 app.get('/customer_deleteself', customer.customer_deleteself);
 app.get('/customerhome', customer.login);
-app.get('/getcustomerdetails', customer.getcustomerdetails);
+app.get('/getCustomerDetails', customer.getcustomerdetails);
 app.post('/checkCustomerAvailability', customer.checkCustomerAvailability);
 app.post('/getUserDetailsByName', customer.getUserDetailsByName);
 

@@ -45,7 +45,7 @@
 
 				<div data-ng-app="loginDriverApp"
 					data-ng-controller="loginDriverController">
-					<form class="form-vertical" name="loginDrive" novalidate>
+					<form class="form-vertical" name="loginDrive" data-ng-submit="loginDrive.$valid && loginDriver()" novalidate>
 
 						<h1 style="color: #fff; text-align: center; font-size: 40px;">U
 							B E R</h1>
@@ -56,6 +56,7 @@
 							data-ng-class="{
                     'has-error': (loginDrive.email.$touched||loginDrive.email.$dirty|| loginDrive.submitted) && loginDrive.email.$invalid,
                     'has-success': loginDrive.email.$dirty && loginDrive.email.$valid}">
+                    <div class="alert alert-danger"  data-ng-show="serverMessage"><span class="glyphicon glyphicon-remove red" aria-hidden="true"></span>{{serverMessage}}</div>
 							<label class=" control-label" for="email">Email</label> 
 							<input class="form-control" type="email" value="" data-ng-model="driver.email" name="email" id="email"
 								placeholder="name@example.com" data-ng-pattern="/\S+@\S+\.\S+/"
@@ -92,9 +93,8 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<button type="submit" class="btn btn-info"
-								style="padding: 16px 154px; font-size: 14px;"
-								data-ng-click="loginDriver()">LOG IN</button>
+							<button type="submit" class="btn btn-lg btn-info btn-block" style=" font-size:16px;"
+								data-ng-click="loginDrive.submitted=true">LOG IN</button>
 						</div>
 					</form>
 				</div>
@@ -110,41 +110,23 @@
 	app.controller('loginDriverController', function($http, $scope, $parse) {
 
 		$scope.loginDriver = function() {
-			if ($scope.loginDrive.$invalid) {
-				
-				$scope.loginDrive.submitted = true;
-			}
-
-			else {
+		
 				$http({
 					method : 'POST',
 					url : '/loginDriver',
 					data : $scope.driver
 				}).then(
 						function(response) {
-							alert("Hello driver logged in");
+							
 							window.location.assign('/driverhome');
 
 						},
 						function(response) {
-							alert("driver has failed to login");
-							alert(response.data);
-							for ( var fieldName in response.data) {
-								var serverMessage;
-								var message = response.data[fieldName];
-								alert(message);
-								alert(fieldName);
-								if(fieldName === 'loginDrive')
-									 serverMessage = $parse('loginDrive'+'.$error.serverMessage');
-								else
-								 serverMessage = $parse('loginDrive.' + fieldName + '.$error.serverMessage');
-								alert(serverMessage);
-								$scope.loginDrive.$setValidity(fieldName, true, $scope.loginDrive);
-								serverMessage.assign($scope, response.data[fieldName]);
+							  $scope.serverMessage=response.data;
 
-							}
+							
 						});
-			}
+			
 		}
 	});
 </script>

@@ -315,7 +315,7 @@ color:red;
           }).
             then(function(response) { 
               alert("Hello customer");
-                
+                $window.location.href = '/loginCustomer';
       },function(response){
        for (var fieldName in response.data) {
                      var message = response.data[fieldName];

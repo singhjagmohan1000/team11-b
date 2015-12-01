@@ -7,7 +7,7 @@ function signup(req,res){
 	
 	if(req.session.driver_id){
 		
-		res.render("driverhome");
+		res.render("driverDashboard");
 	}
 	else{
 		
@@ -20,7 +20,7 @@ function login(req,res){
 	
 	if(req.session.driver_id){
 		
-		res.render("driverhome");
+		res.render("driverDashboard");
 	}
 	else{
 		
@@ -49,13 +49,13 @@ function loginDriver(req,res){
             	console.log("IN IF OF DRIVER LOGIN");
             	req.session.driver_id = results.driver_id;
             	res.status(200).send("success");
-            	//res.render("driverhome");
+            	
             }            
             else{
             	
             	console.log("IN ELSE OF DRIVER LOGIN");
             	
-            	res.status(404).send({loginDrive:results.message});           	         	
+            	res.status(404).send(" Invalid Usernam & Password! Please try again.");           	         	
             }
         }
     });

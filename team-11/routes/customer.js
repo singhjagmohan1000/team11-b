@@ -6,7 +6,7 @@ function signup(req,res){
 	
 	if(req.session.customer_id){
 		
-		res.render("customerhome");
+		res.render("customerHome");
 	}
 	else{
 		
@@ -19,7 +19,7 @@ function login(req,res){
 	
 	if(req.session.customer_id){
 		
-		res.render("customerhome");
+		res.render("customerHome");
 	}
 	else{
 		
@@ -49,7 +49,7 @@ function loginCustomer(req,res){
             }
             else {
             	
-            	res.status(404).send("customer login failed");
+            	res.status(404).send("Invalid User Name & Password! Please try again");
             }
         }
     });
@@ -79,13 +79,13 @@ function signupCustomer(req,res){
     //var zipCode_validate = new RegExp("^\\d{5}(-\\d{4})?$");
     
     
-    if(!customer_id_validate.test(customer_id)){
-    	
-    	console.log("in IF. invalid SSN");
-    	res.end("invalid customer_id");
-    	return;
-    }
-    
+//    if(!customer_id_validate.test(customer_id)){
+//    	
+//    	console.log("in IF. invalid SSN");
+//    	res.end("invalid customer_id");
+//    	return;
+//    }
+//    
     
     if(!email_validate.test(email)){
     	
@@ -109,12 +109,12 @@ function signupCustomer(req,res){
     	return;     	
     }
     
-    if(cc_number.toString().length > 15 && cc_number.toString().length < 20){
-    	
-    	console.log("In IF invalid Card Number");
-    	res.end("In IF invalid card number");
-    	return;     	
-    }
+//    if(cc_number.toString().length > 15 && cc_number.toString().length < 20){
+//    	
+//    	console.log("In IF invalid Card Number");
+//    	res.end("In IF invalid card number");
+//    	return;     	
+//    }
     
         
     var msg_payload = {
@@ -174,9 +174,10 @@ exports.getcustomerdetails = function(req,res){
         else {
         	
         	console.log("customer records fetched " + JSON.stringify(results));
-        	res.end(JSON.stringify(results)); 
+        	res.status(200).send(results);
         }        
     });
+	
 }
 
 

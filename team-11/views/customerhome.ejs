@@ -2,38 +2,36 @@
 
 <html lang="en">
 <head>
-
-      <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-
-      <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-
-      <script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
-
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-
-      <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link href="css/dashboard.css" rel="stylesheet">
       
-      <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
 
-<title>Driver HOME</title>
+<title>Uber | Customer HOME</title>
 <style>
       html, body {
         height: 100%;
         /*margin: 0;*/
         /*padding: 10%;*/
       }
-      #map {
+      .nav-sidebar> li.active > a,
+
+.nav-sidebar> li.active > a:hover,
+
+.nav-sidebar > li.active > a:focus
+{
+ background:#1EACC7;
+}
+.nav-sidebar > li{
+border: solid 1px #fff;
+}
+       #map {
         height: 80%;
         margin-right: 400;
 
         /*margin-bottom: 50;*/
         /*padding: 20%;*/
 
-      }
+      } 
 .controls {
   margin-top: 10px;
   border: 1px solid transparent;
@@ -46,9 +44,9 @@
 }
 
 #pac-input {
-    position: absolute;
+    position: relative;
     top: 2px;
-    left: 8%;
+ 
     z-index: 5;
   background-color: #fff;
   font-family: Roboto;
@@ -57,26 +55,26 @@
   margin-left: 12px;
   padding: 0 11px 0 13px;
   text-overflow: ellipsis;
-  width: 300px;
-}
+  width:25%;
+  }
 
 #pac-input:focus {
   border-color: #4d90fe;
 }
 
 #pac-output {
-    position: absolute;
+    position: relative;
     top: 2px;
-    left: 32%;
+    
     z-index: 5;
   background-color: #fff;
   font-family: Roboto;
   font-size: 15px;
   font-weight: 300;
-  margin-left: 12px;
-  padding: 0 11px 0 13px;
+  width:25%;
+ 
   text-overflow: ellipsis;
-  width: 300px;
+ 
 }
 
 #pac-output:focus {
@@ -151,82 +149,100 @@
 </style>
 </head>
 
-<body ng-app = "UberApp" ng-controller = "RideRequestController">
-
+<body data-ng-app = "customerHomeApp" data-ng-controller = "customerHomeController">
+ <nav class="navbar navbar-inverse navbar-fixed-top" style="background-color:#00001a">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand"  href="#">U B E R</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Logout</a></li>
+          </ul>
+          
+        </div>
+      </div>
+    </nav>
+   <div class="container-fluid" style="width:100%; height:100%;">
+   <div class="row" style="width:100%; height:100%;">
+   <div class="col-sm-3 col-md-2 sidebar" >
+          <img class="img-circle" style="margin:0 0 0 -12px;height:200px;width:200px"  data-ng-src = "./img/{{profile_pic}}"/>
+          <ul class="nav nav-sidebar">
+          
+            <li class="active"><a data-toggle="tab" href="#startRide">Ready to Ride <span class="sr-only">(current)</span></a></li>
+            <li><a data-toggle="tab" href="#myTrips">My Trips</a></li>
+            <li><a data-toggle="tab" href="#myProfile">Profile</a></li>
+            <li><a  href="/signout" role="button">Logout</a></li>
+          </ul>
+          </div>
+ <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" style="width:100%; height:100%;">
+		
+		<div class="tab-content" style="width:100%; height:100%;">
+			<div id="startRide" class="tab-pane fade in active" style="width:100%; height:100%;">
+    <h2 class="sub-header">Starting Your Ride    <button type="submit" style="background:#1EACC7;" class="btn btn-primary active" data-ng-click = "startRide()">Request Ride</button>
+    <button type="submit" style="background:#1EACC7;" class="btn btn-primary active" data-ng-click = "endRide()">End Ride</button>
+    <button type="submit" style="background:#1EACC7;" class="btn btn-primary active" data-ng-click = "showDrivers()">Show Drivers</button></h2>
       <input id="pac-input"  class="controls" type="text"
       placeholder="choose pick-up location">
       <input id="pac-output"  class="controls" type="text"
           placeholder="choose destination">
     <div id="right-panel"></div>
     <div id = "map">
-    </div>  
-    <button type="button" class="btn btn-primary active" ng-click = "startRide()">Request Ride</button>
-    <button type="button" class="btn btn-primary active" ng-click = "endRide()">End Ride</button>
-    <button type="button" class="btn btn-primary active" ng-click = "showDrivers()">Show Drivers</button>
-    <script type="text/javascript" src= "../resources/map.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgYPa3rFTfvxYkwI6EQxD12w5zKmbC4I0&signed_in=true&libraries=places&callback=initMap"
-        async defer></script>
+    </div>
+    
 
-	<div class="container">
-
-		<div class="row">
-
-			<h2>HELLO CUSTOMER</h2>
+	
+    </div>
+    <div id="myTrips" class="tab-pane">
+        	<h2 class="sub-header">My Trips</h2>
+			<h1>HI</h1>
+        	</div>
+    <div id="myProfile" class="tab-pane">
+        	<h2 class="sub-header">Update Your Profile</h2>
 			
-			<button ng-click = "customer_deleteself()">delete my account</button>
 			
 			<div>
 			
-				{{customer.customer_id}} {{customer.c_first_name}} {{customer.c_last_name}} {{customer.c_car_number}}			
+				<span>{{customer.customer_id}} {{customer.c_first_name}} {{customer.c_last_name}} 	</span>		
 		
 			</div>
-		
-			<form method = "GET" action = "/signout">
-				<button type = "submit">Sign Out</button>		
-			</form>	
+        	</div>
+    </div>
+    </div>
+   
+    </div> 
+    
+	
+
 			
 			<!-- Prajwal Kondawar START -->
 			<button ng-click = "deleteRideBill()">delete ride</button>
 			
-			<input type="text" placeholder="Attribute Type" ng-model="attributeType">
-			<input type="text" placeholder="Attribute Value" ng-model="attributeValue">
-			<button ng-click = "searchBillByAttributes()">Search Bill</button>
+			<input type="text" placeholder="Attribute Type" data-ng-model="attributeType">
+			<input type="text" placeholder="Attribute Value" data-ng-model="attributeValue">
+			<button data-ng-click = "searchBillByAttributes()">Search Bill</button>
 			
 			<!-- Prajwal Kondawar END -->
 			
-		</div>
 
-	</div>
-	
-	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>		
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script> -->
- <!--    <script>
+
+    </div>
     
-        function appController($scope, $http) {
-        	
-            $http({method: 'GET', url: '/getdriverdetails'}).then(function successCallback(response) {
-            		    
-            		alert("received driver details : " + JSON.stringify(response));
-            			    	
-            }, function errorCallback(response) {});
-            
-            
-            $scope.customer_deleteself = function(){
-            	
-            	alert("deleting customer self");
-            	$http({method: 'GET', url: '/customer_deleteself'}).then(function successCallback(response) {
-        		    
-            		alert("customer self deleted..");    
-            		window.location.assign("/customerhome");
-            			    	
-            	}, function errorCallback(response) {});           	
-            	
-            }
-            
-            
-        };
-    </script> -->
+    
+
 	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+<script type="text/javascript" src= "../resources/map.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgYPa3rFTfvxYkwI6EQxD12w5zKmbC4I0&signed_in=true&libraries=places&callback=initMap"
+        async defer></script>
+
 </body>
 </html>
